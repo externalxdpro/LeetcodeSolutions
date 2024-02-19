@@ -27,22 +27,18 @@
 #include <fmt/ranges.h>
 #include <vector>
 
-// using loop
+// using log
 class Solution {
   public:
     bool isPowerOfTwo(int n) {
-        int result = 1;
-        for (int x = 0; x <= 30; x++) {
-            if (result == n) {
-                return true;
-            }
-            if (result > n || result > INT_MAX / 2) {
-                break;
-            }
-
-            result *= 2;
+        if (n <= 0) {
+            return false;
         }
 
+        double log = std::log2(n);
+        if ((int)log == log) {
+            return true;
+        }
         return false;
     }
 };
