@@ -7,12 +7,12 @@
 // Example 1:
 // Input: n = 1
 // Output: true
-// Explanation: 20 = 1
+// Explanation: 2^0 = 1
 
 // Example 2:
 // Input: n = 16
 // Output: true
-// Explanation: 24 = 16
+// Explanation: 2^4 = 16
 
 // Example 3:
 // Input: n = 3
@@ -27,20 +27,10 @@
 #include <fmt/ranges.h>
 #include <vector>
 
-// using log
+// using bitwise and
 class Solution {
   public:
-    bool isPowerOfTwo(int n) {
-        if (n <= 0) {
-            return false;
-        }
-
-        double log = std::log2(n);
-        if ((int)log == log) {
-            return true;
-        }
-        return false;
-    }
+    bool isPowerOfTwo(int n) { return (n > 0 && (n & (n - 1)) == 0); }
 };
 
 int main(int argc, char *argv[]) {
