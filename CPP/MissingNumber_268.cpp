@@ -31,24 +31,16 @@
 
 #include <algorithm>
 #include <fmt/ranges.h>
+#include <numeric>
 #include <vector>
 
-// O(n) time, O(n) space
+// O(n) time, O(1) space
 class Solution {
   public:
     int missingNumber(std::vector<int> &nums) {
-        std::vector<bool> found(nums.size() + 1, false);
-
-        for (int i : nums) {
-            found[i] = true;
-        }
-        for (int i = 0; i < found.size(); i++) {
-            if (!found[i]) {
-                return i;
-            }
-        }
-
-        return -1;
+        int n   = nums.size();
+        int sum = n * (n + 1) / 2;
+        return sum - std::accumulate(nums.begin(), nums.end(), 0);
     }
 };
 
