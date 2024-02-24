@@ -3,7 +3,7 @@
 #include <vector>
 
 int main(int argc, char *argv[]) {
-    // type tests = {};
+    // std::vector<> tests = {};
 
     // Solution solution;
     // for (auto &[test, ans] : tests) {
