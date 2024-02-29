@@ -43,38 +43,50 @@
 
 #include <algorithm>
 #include <fmt/ranges.h>
-#include <unordered_map>
+#include <queue>
 #include <vector>
 
-// dfs + map
+// bfs
 class Solution {
   public:
     bool isEvenOddTree(TreeNode *root) {
-        std::unordered_map<int, int> lastVal;
-        return dfs(root, 0, lastVal);
-    }
+        std::queue<TreeNode *> nodes;
+        nodes.push(root);
 
-  private:
-    bool dfs(TreeNode *node, int height,
-             std::unordered_map<int, int> &lastVal) {
-        if (node == nullptr) {
-            return true;
-        }
-        if (node->val % 2 == height % 2) {
-            return false;
-        }
-        if (lastVal[height] != 0) {
-            if (height % 2 == 0 && lastVal[height] >= node->val) {
-                return false;
+        int level   = 0;
+        int lastVal = 0;
+        while (!nodes.empty()) {
+            int size = nodes.size();
+            while (size--) {
+                auto front = nodes.front();
+                nodes.pop();
+
+                if (front == nullptr) {
+                    continue;
+                }
+
+                if (front->val % 2 == level % 2) {
+                    return false;
+                }
+                if (lastVal != 0) {
+                    if (level % 2 == 0 && lastVal >= front->val) {
+                        return false;
+                    }
+                    if (level % 2 != 0 && lastVal <= front->val) {
+                        return false;
+                    }
+                }
+                lastVal = front->val;
+
+                nodes.push(front->left);
+                nodes.push(front->right);
             }
-            if (height % 2 != 0 && lastVal[height] <= node->val) {
-                return false;
-            }
+
+            lastVal = 0;
+            level++;
         }
 
-        lastVal[height] = node->val;
-        return dfs(node->left, height + 1, lastVal) &&
-               dfs(node->right, height + 1, lastVal);
+        return true;
     }
 };
 
