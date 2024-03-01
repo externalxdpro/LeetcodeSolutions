@@ -30,13 +30,7 @@
 class Solution {
   public:
     std::string maximumOddBinaryNumber(std::string s) {
-        int ones = 0;
-        for (char i : s) {
-            if (i == '1') {
-                ones++;
-            }
-        }
-
+        int ones = std::count(s.begin(), s.end(), '1');
         return std::string(ones - 1, '1') + std::string(s.size() - ones, '0') +
                '1';
     }
