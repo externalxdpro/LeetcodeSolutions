@@ -34,9 +34,21 @@ pub struct Solution {}
 
 impl Solution {
     pub fn sorted_squares(nums: Vec<i32>) -> Vec<i32> {
-        let mut squares: Vec<i32> = nums.iter().map(|x| x * x).collect();
-        squares.sort();
-        squares
+        let mut squared: Vec<i32> = vec![0; nums.len()];
+        let mut l = 0;
+        let mut r = nums.len() - 1;
+
+        for i in (0..nums.len()).rev() {
+            if nums[l].abs() > nums[r].abs() {
+                squared[i] = nums[l].pow(2);
+                l += 1;
+            } else {
+                squared[i] = nums[r].pow(2);
+                r -= 1;
+            }
+        }
+
+        squared
     }
 }
 
