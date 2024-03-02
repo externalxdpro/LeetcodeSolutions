@@ -2,5 +2,6 @@
 !*.*
 !*/
 .*/
-bin
-obj
+CS/bin
+CS/obj
+Rust/target
