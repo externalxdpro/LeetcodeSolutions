@@ -58,3 +58,5 @@ mod tests {
         );
     }
 }
+
+fn main() {}
