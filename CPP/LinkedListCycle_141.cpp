@@ -35,20 +35,19 @@
 
 #include <algorithm>
 #include <fmt/ranges.h>
-#include <unordered_set>
 #include <vector>
 
-// O(n) space
+// O(1) space
 class Solution {
   public:
     bool hasCycle(ListNode *head) {
-        std::unordered_set<ListNode *> found;
-        while (head != nullptr) {
-            if (found.contains(head)) {
+        auto fast = head, slow = head;
+        while (fast != nullptr && fast->next != nullptr) {
+            fast = fast->next->next;
+            slow = slow->next;
+            if (fast == slow) {
                 return true;
             }
-            found.insert(head);
-            head = head->next;
         }
 
         return false;
