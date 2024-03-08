@@ -24,31 +24,29 @@
 
 #include <algorithm>
 #include <fmt/ranges.h>
-#include <unordered_map>
 #include <vector>
 
-// using map
+// without using map
 class Solution {
   public:
     int maxFrequencyElements(std::vector<int> &nums) {
-        std::unordered_map<int, int> occurrences;
+        std::vector<int> occurrences(101);
+        int              max    = 0;
+        int              result = 0;
         for (int i : nums) {
             occurrences[i]++;
-        }
 
-        int max = 0;
-        for (auto [k, v] : occurrences) {
-            max = std::max(max, v);
-        }
+            if (occurrences[i] > max) {
+                max    = occurrences[i];
+                result = 0;
+            }
 
-        int result = 0;
-        for (int i : nums) {
             if (occurrences[i] == max) {
                 result++;
             }
         }
 
-        return result;
+        return result * max;
     }
 };
 
