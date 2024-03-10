@@ -28,16 +28,10 @@ use std::collections::HashSet;
 
 impl Solution {
     pub fn intersection(nums1: Vec<i32>, nums2: Vec<i32>) -> Vec<i32> {
-        let nums1_set: HashSet<i32> = nums1.into_iter().collect();
-        let mut result: HashSet<i32> = HashSet::new();
+        let set1: HashSet<i32> = nums1.into_iter().collect();
+        let set2: HashSet<i32> = nums2.into_iter().collect();
 
-        for i in nums2 {
-            if nums1_set.contains(&i) {
-                result.insert(i);
-            }
-        }
-
-        result.into_iter().collect()
+        HashSet::intersection(&set1, &set2).cloned().collect()
     }
 }
 
