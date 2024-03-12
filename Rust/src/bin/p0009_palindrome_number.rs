@@ -31,14 +31,19 @@ pub struct Solution {}
 
 impl Solution {
     pub fn is_palindrome(x: i32) -> bool {
-        let str = x.to_string();
-        if str.len() % 2 == 0 {
-            str[..str.len() / 2].to_string()
-                == str[str.len() / 2..].chars().rev().collect::<String>()
-        } else {
-            str[..str.len() / 2].to_string()
-                == str[str.len() / 2 + 1..].chars().rev().collect::<String>()
+        if x < 0 {
+            return false;
         }
+
+        let mut n = x;
+        let mut new = 0;
+
+        while n != 0 {
+            new = new * 10 + n % 10;
+            n /= 10;
+        }
+
+        x == new
     }
 }
 
@@ -52,6 +57,9 @@ mod tests {
     fn test_9() {
         assert_eq!(Solution::is_palindrome(121), true);
         assert_eq!(Solution::is_palindrome(-121), false);
+        assert_eq!(Solution::is_palindrome(10), false);
+        assert_eq!(Solution::is_palindrome(11), true);
+        assert_eq!(Solution::is_palindrome(1001), true);
     }
 }
 
