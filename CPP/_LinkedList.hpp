@@ -2,19 +2,19 @@
 #include <vector>
 
 struct ListNode {
-    int val;
+    int       val;
     ListNode *next;
     ListNode() : val(0), next(nullptr) {}
     ListNode(int x) : val(x), next(nullptr) {}
     ListNode(int x, ListNode *next) : val(x), next(next) {}
 };
 
-inline ListNode *createLinkedList(const std::vector<int> &arr) {
+inline ListNode *toLinkedList(const std::vector<int> &arr) {
     ListNode *root = nullptr;
 
-    for (int i = 0; i < arr.size(); i++) {
-        ListNode *newNode = new ListNode(arr[i]);
-        ListNode *ptr;
+    for (int i : arr) {
+        auto     *newNode = new ListNode(i);
+        ListNode *ptr     = nullptr;
         if (root == nullptr) {
             root = newNode;
         } else {
@@ -26,6 +26,17 @@ inline ListNode *createLinkedList(const std::vector<int> &arr) {
         }
     }
     return root;
+}
+
+inline std::vector<int> toVector(ListNode *root) {
+    std::vector<int> result;
+
+    while (root != nullptr) {
+        result.push_back(root->val);
+        root = root->next;
+    }
+
+    return result;
 }
 
 inline void printLinkedList(ListNode *root) {
