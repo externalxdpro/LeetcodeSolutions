@@ -21,13 +21,23 @@ pub struct Solution {}
 
 // submission codes start here
 
-// O(nlogn)
+// O(n)
 impl Solution {
     pub fn is_anagram(s: String, t: String) -> bool {
-        let mut s_vec: Vec<char> = s.chars().collect();
-        s_vec.sort();
-        let mut t_vec: Vec<char> = t.chars().collect();
-        t_vec.sort();
+        if s.len() != t.len() {
+            return false;
+        }
+
+        let mut s_vec: Vec<i32> = vec![0; 26];
+        let mut t_vec: Vec<i32> = vec![0; 26];
+
+        for i in s.chars() {
+            s_vec[i as usize - 'a' as usize] += 1;
+        }
+        for i in t.chars() {
+            t_vec[i as usize - 'a' as usize] += 1;
+        }
+
         s_vec == t_vec
     }
 }
