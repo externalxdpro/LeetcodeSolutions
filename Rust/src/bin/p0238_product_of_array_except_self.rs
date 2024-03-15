@@ -23,17 +23,20 @@ pub struct Solution {}
 
 // submission codes start here
 
-// brute-force (TLE)
+// prefix and suffix product
 impl Solution {
     pub fn product_except_self(nums: Vec<i32>) -> Vec<i32> {
-        (0..nums.len())
-            .map(|n| {
-                nums.iter()
-                    .enumerate()
-                    .filter_map(|(i, v)| (i != n).then(|| v))
-                    .product()
-            })
-            .collect()
+        let mut prefix = vec![1; nums.len()];
+        let mut suffix = vec![1; nums.len()];
+
+        for i in 1..nums.len() {
+            prefix[i] = prefix[i - 1] * nums[i - 1];
+        }
+        for i in (0..=(nums.len() - 2)).rev() {
+            suffix[i] = suffix[i + 1] * nums[i + 1];
+        }
+
+        (0..nums.len()).map(|i| prefix[i] * suffix[i]).collect()
     }
 }
 
@@ -51,10 +54,6 @@ mod tests {
         );
         assert_eq!(
             Solution::product_except_self(vec![-1, 1, 0, -3, 3]),
-            vec![0, 0, 9, 0, 0]
-        );
-        assert_eq!(
-            Solution::product_except_self(vec![-1; 1e5 as usize]),
             vec![0, 0, 9, 0, 0]
         );
     }
