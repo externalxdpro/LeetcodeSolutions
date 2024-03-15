@@ -24,21 +24,11 @@ pub struct Solution {}
 // O(n)
 impl Solution {
     pub fn is_anagram(s: String, t: String) -> bool {
-        if s.len() != t.len() {
-            return false;
-        }
+        let mut counts = vec![0; 26];
+        s.bytes().for_each(|x| counts[(x - b'a') as usize] += 1);
+        t.bytes().for_each(|x| counts[(x - b'a') as usize] -= 1);
 
-        let mut s_vec: Vec<i32> = vec![0; 26];
-        let mut t_vec: Vec<i32> = vec![0; 26];
-
-        for i in s.chars() {
-            s_vec[i as usize - 'a' as usize] += 1;
-        }
-        for i in t.chars() {
-            t_vec[i as usize - 'a' as usize] += 1;
-        }
-
-        s_vec == t_vec
+        !counts.into_iter().any(|x| x != 0)
     }
 }
 
