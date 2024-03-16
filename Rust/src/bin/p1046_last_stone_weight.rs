@@ -33,19 +33,14 @@ use std::collections::BinaryHeap;
 
 impl Solution {
     pub fn last_stone_weight(stones: Vec<i32>) -> i32 {
-        let mut heap: BinaryHeap<i32> = stones.into_iter().collect();
-        while heap.len() >= 2 {
-            let a = heap.pop().unwrap();
-            let b = heap.pop().unwrap();
-            if a != b {
-                heap.push(a - b)
+        let mut heap = BinaryHeap::from(stones);
+        while let Some(x) = heap.pop() {
+            match heap.pop() {
+                Some(y) => heap.push(x - y),
+                None => return x,
             }
         }
-
-        match heap.peek() {
-            Some(&n) => n,
-            None => 0,
-        }
+        0
     }
 }
 
