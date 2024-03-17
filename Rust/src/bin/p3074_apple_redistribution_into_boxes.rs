@@ -30,20 +30,14 @@ pub struct Solution {}
 impl Solution {
     pub fn minimum_boxes(apple: Vec<i32>, mut capacity: Vec<i32>) -> i32 {
         capacity.sort_by(|a, b| b.cmp(a));
-        let mut result = -1;
-        capacity
-            .into_iter()
-            .enumerate()
-            .fold(apple.into_iter().sum::<i32>(), |mut acc, (i, v)| {
-                acc -= if acc > 0 { v } else { 0 };
-                result = if acc <= 0 && result == -1 {
-                    (i + 1) as i32
-                } else {
-                    result
-                };
-                acc
-            });
-        result
+        let mut sum: i32 = apple.into_iter().sum();
+        for (i, v) in capacity.into_iter().enumerate() {
+            sum -= v;
+            if sum <= 0 {
+                return (i + 1) as i32;
+            }
+        }
+        -1
     }
 }
 
