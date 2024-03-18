@@ -24,35 +24,22 @@
 class Solution {
   public:
     std::vector<std::string> generateParenthesis(int n) {
-        std::unordered_set<std::string> result;
-        dp(n, n, 0, "", result);
-
-        return std::vector(result.begin(), result.end());
+        std::vector<std::string> result;
+        dp(n, 0, "", result);
+        return result;
     }
 
   private:
-    void dp(int n, int left, int open, std::string curr,
-            std::unordered_set<std::string> &result) {
-        if (open == n) {
-            while (open != 0) {
-                curr += ')';
-                open--;
-            }
-            result.insert(curr);
-            return;
+    void dp(int left, int open, std::string curr,
+            std::vector<std::string> &result) {
+        if (left == 0 && open == 0) {
+            result.push_back(curr);
         }
-        if (left == 0) {
-            while (open != 0) {
-                curr += ')';
-                open--;
-            }
-            result.insert(curr);
-            return;
+        if (left > 0) {
+            dp(left - 1, open + 1, curr + '(', result);
         }
-
-        dp(n, left - 1, open + 1, curr + '(', result);
-        if (open >= 1) {
-            dp(n, left, open - 1, curr + ')', result);
+        if (open > 0) {
+            dp(left, open - 1, curr + ')', result);
         }
     }
 };
