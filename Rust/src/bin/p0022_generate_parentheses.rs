@@ -24,11 +24,10 @@ impl Solution {
         Self::dp(n, 0, "".to_string()).into_iter().collect()
     }
 
-    fn dp(left: i32, open: i32, curr: String) -> std::collections::HashSet<String> {
-        use std::collections::HashSet;
-        let mut result = HashSet::new();
+    fn dp(left: i32, open: i32, curr: String) -> Vec<String> {
+        let mut result = Vec::new();
         if left == 0 && open == 0 {
-            result.insert(curr.clone());
+            result.push(curr.clone());
         }
         if left > 0 {
             result.extend(Self::dp(left - 1, open + 1, format!("{}(", curr.clone())));
