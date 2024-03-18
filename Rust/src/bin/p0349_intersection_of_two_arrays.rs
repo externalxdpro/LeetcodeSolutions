@@ -19,12 +19,13 @@
  */
 
 pub struct Solution {}
-use std::collections::HashSet;
 
 // problem: https://leetcode.com/problems/intersection-of-two-arrays/
 // discuss: https://leetcode.com/problems/intersection-of-two-arrays/discuss/?currentPage=1&orderBy=most_votes&query=
 
 // submission codes start here
+
+use std::collections::HashSet;
 
 impl Solution {
     pub fn intersection(nums1: Vec<i32>, nums2: Vec<i32>) -> Vec<i32> {
@@ -48,8 +49,10 @@ mod tests {
             vec![2]
         );
         assert_eq!(
-            Solution::intersection(vec![4, 9, 5], vec![9, 4, 9, 8, 4]),
-            vec![9, 4]
+            Solution::intersection(vec![4, 9, 5], vec![9, 4, 9, 8, 4])
+                .into_iter()
+                .collect::<HashSet<i32>>(),
+            vec![4, 9].into_iter().collect()
         );
     }
 }
