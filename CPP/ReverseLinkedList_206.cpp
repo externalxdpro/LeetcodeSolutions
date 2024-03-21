@@ -29,18 +29,19 @@
 #include <fmt/ranges.h>
 #include <vector>
 
-// Recursive
+// Iterative
 class Solution {
   public:
     ListNode *reverseList(ListNode *head) {
-        if (head == nullptr || head->next == nullptr) {
-            return head;
-        }
+        ListNode *next = nullptr, *prev = nullptr;
 
-        ListNode *temp   = reverseList(head->next);
-        head->next->next = head;
-        head->next       = nullptr;
-        return temp;
+        while (head != nullptr) {
+            next       = head->next;
+            head->next = prev;
+            prev       = head;
+            head       = next;
+        }
+        return prev;
     }
 };
 
