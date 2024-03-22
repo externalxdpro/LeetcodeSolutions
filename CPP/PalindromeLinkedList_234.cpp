@@ -23,34 +23,22 @@
 
 #include <algorithm>
 #include <fmt/ranges.h>
-#include <stack>
 #include <vector>
 
 class Solution {
   public:
     bool isPalindrome(ListNode *head) {
-        int  len  = 0;
-        auto temp = head;
+        std::vector<int> list;
+        auto             temp = head;
         while (temp != nullptr) {
-            len++;
+            list.push_back(temp->val);
             temp = temp->next;
         }
-        std::stack<int> found;
-        temp = head;
-        for (int i = 0; i < len / 2; i++) {
-            found.push(temp->val);
-            temp = temp->next;
-        }
-        if (len % 2 == 1) {
-            temp = temp->next;
-        }
-
-        while (temp != nullptr) {
-            if (found.top() != temp->val) {
+        for (int i = list.size() - 1; i >= 0; i--) {
+            if (list[i] != head->val) {
                 return false;
             }
-            found.pop();
-            temp = temp->next;
+            head = head->next;
         }
 
         return true;
