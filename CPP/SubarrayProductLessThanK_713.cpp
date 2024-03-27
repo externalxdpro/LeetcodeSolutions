@@ -29,18 +29,16 @@
 class Solution {
   public:
     int numSubarrayProductLessThanK(std::vector<int> &nums, int k) {
-        int result = 0;
-        for (int i = 0; i < nums.size(); i++) {
-            int product = 1;
-            for (int j = i; j < nums.size(); j++) {
-                product *= nums[j];
-                if (product >= k) {
-                    break;
-                }
-                result++;
+        int       l = 0, r = 0;
+        long long product = 1;
+        int       result  = 0;
+        for (; r < nums.size(); r++) {
+            product *= nums[r];
+            for (; product >= k && l <= r; l++) {
+                product /= nums[l];
             }
+            result += (r - l + 1);
         }
-
         return result;
     }
 };
