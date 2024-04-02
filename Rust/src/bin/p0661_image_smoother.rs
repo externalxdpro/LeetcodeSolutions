@@ -32,46 +32,22 @@ pub struct Solution {}
 
 impl Solution {
     pub fn image_smoother(img: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
-        let mut result = img.clone();
+        let mut result = vec![vec![0; img[0].len()]; img.len()];
 
         for i in 0..img.len() {
             for j in 0..img[i].len() {
-                let mut sum = img[i][j];
-                let mut valid = 1;
+                let i_start = i.saturating_sub(1);
+                let i_end = (i + 1).min(img.len() - 1);
+                let j_start = j.saturating_sub(1);
+                let j_end = (j + 1).min(img[i].len() - 1);
 
-                if i > 0 {
-                    sum += img[i - 1][j];
-                    valid += 1;
+                let (mut sum, mut valid) = (0, 0);
+                for i in i_start..=i_end {
+                    for j in j_start..=j_end {
+                        sum += img[i][j];
+                        valid += 1;
+                    }
                 }
-                if i < img.len() - 1 {
-                    sum += img[i + 1][j];
-                    valid += 1;
-                }
-                if j > 0 {
-                    sum += img[i][j - 1];
-                    valid += 1;
-                }
-                if j < img[i].len() - 1 {
-                    sum += img[i][j + 1];
-                    valid += 1;
-                }
-                if i > 0 && j > 0 {
-                    sum += img[i - 1][j - 1];
-                    valid += 1;
-                }
-                if i < img.len() - 1 && j > 0 {
-                    sum += img[i + 1][j - 1];
-                    valid += 1;
-                }
-                if i > 0 && j < img[i].len() - 1 {
-                    sum += img[i - 1][j + 1];
-                    valid += 1;
-                }
-                if i < img.len() - 1 && j < img[i].len() - 1 {
-                    sum += img[i + 1][j + 1];
-                    valid += 1;
-                }
-
                 result[i][j] = sum / valid;
             }
         }
