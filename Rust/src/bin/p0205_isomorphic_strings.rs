@@ -30,10 +30,10 @@ impl Solution {
     pub fn is_isomorphic(s: String, t: String) -> bool {
         use std::collections::HashSet;
 
-        let zip = s.chars().zip(t.chars()).collect::<HashSet<_>>();
+        let zip = s.chars().zip(t.chars()).collect::<HashSet<_>>().len();
 
-        zip.len() == s.chars().collect::<HashSet<_>>().len()
-            && zip.len() == t.chars().collect::<HashSet<_>>().len()
+        zip == s.chars().collect::<HashSet<_>>().len()
+            && zip == t.chars().collect::<HashSet<_>>().len()
     }
 }
 
