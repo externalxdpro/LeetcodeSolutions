@@ -31,12 +31,13 @@ pub struct Solution {}
 
 // submission codes start here
 
+// O(log(n))
 impl Solution {
     pub fn maximum_count(nums: Vec<i32>) -> i32 {
         std::cmp::max(
-            nums.iter().filter(|&&x| x > 0).count(),
-            nums.iter().filter(|&&x| x < 0).count(),
-        ) as i32
+            nums[..].partition_point(|&x| x < 0) as i32,
+            (nums.len() - nums[..].partition_point(|&x| x <= 0)) as i32,
+        )
     }
 }
 
