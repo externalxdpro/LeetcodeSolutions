@@ -27,33 +27,22 @@ pub struct Solution {}
 
 // submission codes start here
 
-// Manually
+// Using STL
 impl Solution {
     pub fn search_range(nums: Vec<i32>, target: i32) -> Vec<i32> {
-        fn find(nums: &Vec<i32>, target: i32, find_first: bool) -> i32 {
-            let (mut l, mut r) = (0, nums.len() as i32 - 1);
-            let mut result = -1;
-            while l <= r {
-                let m = (r + l) / 2;
-
-                if nums[m as usize] == target {
-                    result = m;
-                    if find_first {
-                        r = m - 1
-                    } else {
-                        l = m + 1
-                    };
-                } else if nums[m as usize] > target {
-                    r = m - 1;
-                } else {
-                    l = m + 1;
-                }
-            }
-
-            result
+        if nums.is_empty() {
+            return vec![-1, -1];
         }
 
-        vec![find(&nums, target, true), find(&nums, target, false)]
+        let left = nums[..].partition_point(|&x| x < target);
+        if left == nums.len() || nums[left] != target {
+            return vec![-1, -1];
+        }
+
+        vec![
+            left as i32,
+            nums[..].partition_point(|&x| x <= target) as i32 - 1,
+        ]
     }
 }
 
