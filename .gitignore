@@ -1,6 +1,7 @@
 *
 !*.*
 !*/
+!Makefile
 .*/
 CS/bin
 CS/obj
