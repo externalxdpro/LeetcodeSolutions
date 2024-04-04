@@ -29,15 +29,13 @@ class Solution {
             return head;
         }
 
-        ListNode *a = head, *b = head;
-
-        while (a != nullptr) {
-            while (b != nullptr && a->val == b->val) {
-                b = b->next;
+        ListNode *curr = head;
+        while (curr->next != nullptr) {
+            if (curr->val == curr->next->val) {
+                curr->next = curr->next->next;
+            } else {
+                curr = curr->next;
             }
-
-            a->next = b;
-            a       = a->next;
         }
 
         return head;
