@@ -33,19 +33,16 @@ pub struct Solution {}
 
 impl Solution {
     pub fn max_depth(s: String) -> i32 {
-        let mut count = 0;
-        let mut max = 0;
-
-        for i in s.chars() {
-            if i == '(' {
-                count += 1;
-                max = std::cmp::max(max, count);
-            } else if i == ')' {
-                count -= 1;
-            }
-        }
-
-        max
+        s.chars()
+            .fold((0, 0), |(max, count), i| {
+                let curr = match i {
+                    '(' => count + 1,
+                    ')' => count - 1,
+                    _ => count,
+                };
+                (std::cmp::max(max, curr), curr)
+            })
+            .0
     }
 }
 
