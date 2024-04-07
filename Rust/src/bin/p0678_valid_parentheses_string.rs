@@ -60,6 +60,7 @@ mod tests {
         assert_eq!(Solution::check_valid_string("(*)".into()), true);
         assert_eq!(Solution::check_valid_string("(*))".into()), true);
         assert_eq!(Solution::check_valid_string("))((".into()), false);
+        assert_eq!(Solution::check_valid_string("(((((*(()((((*((**(((()()*)()()()*((((**)())*)*)))))))(())(()))())((*()()(((()((()*(())*(()**)()(())".into()), false);
     }
 }
 
