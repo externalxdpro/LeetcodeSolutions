@@ -21,21 +21,35 @@
 #include "_BinaryTree.hpp"
 
 #include <fmt/ranges.h>
+#include <queue>
 
-// Recursive
+// Iterative
 class Solution {
   public:
-    bool isSymmetric(TreeNode *root) { return recurse(root, root); }
+    bool isSymmetric(TreeNode *root) {
+        TreeNode              *l = root, *r = root;
+        std::queue<TreeNode *> lq, rq;
+        lq.push(l);
+        rq.push(r);
 
-  private:
-    bool recurse(TreeNode *l, TreeNode *r) {
-        if (l == nullptr && r == nullptr) {
-            return true;
+        while (!lq.empty()) {
+            l = lq.front(), r = rq.front();
+            lq.pop();
+            rq.pop();
+
+            if (l == nullptr && r == nullptr) {
+                continue;
+            }
+            if (l == nullptr || r == nullptr || l->val != r->val) {
+                return false;
+            }
+            lq.push(l->left);
+            rq.push(r->right);
+            lq.push(l->right);
+            rq.push(r->left);
         }
-        if (l == nullptr || r == nullptr || l->val != r->val) {
-            return false;
-        }
-        return recurse(l->left, r->right) && recurse(l->right, r->left);
+
+        return true;
     }
 };
 
