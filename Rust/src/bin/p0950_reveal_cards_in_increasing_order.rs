@@ -40,19 +40,15 @@ pub struct Solution {}
 
 impl Solution {
     pub fn deck_revealed_increasing(mut deck: Vec<i32>) -> Vec<i32> {
-        use std::collections::VecDeque;
-        let mut result: VecDeque<i32> = VecDeque::new();
+        let mut result = std::collections::VecDeque::new();
         deck.sort_unstable();
 
-        for i in deck.into_iter().rev() {
-            if !result.is_empty() {
-                let temp = result.pop_back().unwrap();
-                result.push_front(temp);
-            }
+        while let Some(i) = deck.pop() {
+            result.rotate_right(!result.is_empty() as usize);
             result.push_front(i);
         }
 
-        result.into_iter().collect()
+        result.into()
     }
 }
 
