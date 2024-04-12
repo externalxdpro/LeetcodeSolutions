@@ -23,27 +23,24 @@ pub struct Solution {}
 
 impl Solution {
     pub fn trap(height: Vec<i32>) -> i32 {
-        use std::cmp::{max, min};
-        use std::iter::zip;
-
-        let mut max_left = height[0];
-        let mut max_lefts = vec![0; height.len()];
-        for i in 0..height.len() {
-            max_left = max(max_left, height[i]);
-            max_lefts[i] = max_left;
-        }
-
-        let mut max_right = *height.last().unwrap();
-        let mut max_rights = vec![0; height.len()];
-        for i in (0..height.len()).rev() {
-            max_right = max(max_right, height[i]);
-            max_rights[i] = max_right;
-        }
-
-        let boundary: Vec<i32> = zip(max_lefts, max_rights).map(|(x, y)| min(x, y)).collect();
-        std::iter::zip(boundary, height)
-            .map(|(x, y)| (x - y).abs())
+        use std::{cmp, iter::zip};
+        let max_lefts = height.iter().scan(0, Self::get_max);
+        let max_rights = height
+            .iter()
+            .rev()
+            .scan(0, Self::get_max)
+            .collect::<Vec<i32>>()
+            .into_iter()
+            .rev();
+        let boundary = zip(max_lefts, max_rights).map(|(x, y)| cmp::min(x, y));
+        zip(boundary, height.iter())
+            .map(|(x, &y)| (x - y).abs())
             .sum()
+    }
+
+    fn get_max(max: &mut i32, x: &i32) -> Option<i32> {
+        *max = std::cmp::max(*max, *x);
+        Some(*max)
     }
 }
 
