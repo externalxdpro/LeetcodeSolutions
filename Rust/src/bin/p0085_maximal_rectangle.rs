@@ -28,8 +28,6 @@ pub struct Solution {}
 
 impl Solution {
     pub fn maximal_rectangle(matrix: Vec<Vec<char>>) -> i32 {
-        use std::cmp::{max, min};
-
         let mut row = vec![0; matrix[0].len()];
         let mut result = 0;
 
@@ -37,17 +35,28 @@ impl Solution {
             for i in 0..row.len() {
                 row[i] = if m[i] == '0' { 0 } else { row[i] + 1 };
             }
+            result = std::cmp::max(result, Self::calc_area(&row));
+        }
 
-            for l in 0..row.len() {
-                let mut height = row[l];
-                for r in l..row.len() {
-                    if row[r] == 0 {
-                        break;
-                    }
-                    height = min(height, row[r]);
-                    result = max(result, (r - l + 1) as i32 * height)
-                }
+        result
+    }
+
+    fn calc_area(row: &Vec<i32>) -> i32 {
+        let mut stack: Vec<i32> = vec![-1];
+        let mut result = 0;
+
+        for i in 0..row.len() {
+            while *stack.last().unwrap() != -1 && row[*stack.last().unwrap() as usize] > row[i] {
+                let height = row[stack.pop().unwrap() as usize];
+                let width = i as i32 - *stack.last().unwrap() - 1;
+                result = std::cmp::max(result, height * width);
             }
+            stack.push(i as i32);
+        }
+        while *stack.last().unwrap() != -1 {
+            let height = row[stack.pop().unwrap() as usize];
+            let width = row.len() as i32 - *stack.last().unwrap() - 1;
+            result = std::cmp::max(result, height * width);
         }
 
         result
