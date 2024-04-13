@@ -28,35 +28,29 @@ pub struct Solution {}
 
 impl Solution {
     pub fn maximal_rectangle(matrix: Vec<Vec<char>>) -> i32 {
-        let matrix: Vec<Vec<i32>> = matrix
-            .into_iter()
-            .map(|row| {
-                row.into_iter()
-                    .map(|col| col.to_digit(10).unwrap() as i32)
-                    .collect()
-            })
-            .collect();
+        use std::cmp::{max, min};
+
         let mut row = vec![0; matrix[0].len()];
-        let mut max = 0;
+        let mut result = 0;
 
         for m in matrix {
             for i in 0..row.len() {
-                row[i] = if m[i] == 0 { 0 } else { row[i] + m[i] };
+                row[i] = if m[i] == '0' { 0 } else { row[i] + 1 };
             }
 
             for l in 0..row.len() {
-                let mut min = row[l];
+                let mut height = row[l];
                 for r in l..row.len() {
                     if row[r] == 0 {
                         break;
                     }
-                    min = std::cmp::min(min, row[r]);
-                    max = std::cmp::max(max, (r - l + 1) as i32 * min)
+                    height = min(height, row[r]);
+                    result = max(result, (r - l + 1) as i32 * height)
                 }
             }
         }
 
-        max
+        result
     }
 }
 
