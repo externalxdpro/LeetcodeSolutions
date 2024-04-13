@@ -32,18 +32,20 @@ pub struct Solution {}
 
 // submission codes start here
 
-// Iterative
+// Functional
 impl Solution {
     pub fn maximum_difference(nums: Vec<i32>) -> i32 {
-        let mut min = i32::MAX;
-        let mut result = -1;
-        for i in nums {
-            min = std::cmp::min(min, i);
-            if min != i {
-                result = std::cmp::max(result, i - min);
-            }
-        }
-        result
+        use std::cmp::min;
+        nums.iter()
+            .scan(i32::MAX, |s, &i| {
+                *s = min(*s, i);
+                Some(*s)
+            })
+            .zip(nums.iter())
+            .map(|(x, &y)| y - x)
+            .filter(|&i| i != 0)
+            .max()
+            .unwrap_or(-1)
     }
 }
 
