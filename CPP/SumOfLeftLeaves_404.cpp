@@ -21,23 +21,17 @@
 
 #include "_BinaryTree.hpp"
 
-#include <iostream>
-
 class Solution {
   public:
-    int sumOfLeftLeaves(TreeNode *root) { return dp(root); }
-
-  private:
-    int dp(TreeNode *node) {
-        if (node == nullptr) {
+    int sumOfLeftLeaves(TreeNode *root) {
+        if (root == nullptr) {
             return 0;
         }
-        std::cout << node->val << '\n';
-        if (node->left != nullptr && node->left->left == nullptr &&
-            node->left->right == nullptr) {
-            return node->left->val + dp(node->right);
+        if (root->left != nullptr && root->left->left == nullptr &&
+            root->left->right == nullptr) {
+            return root->left->val + sumOfLeftLeaves(root->right);
         }
-        return dp(node->left) + dp(node->right);
+        return sumOfLeftLeaves(root->left) + sumOfLeftLeaves(root->right);
     }
 };
 
