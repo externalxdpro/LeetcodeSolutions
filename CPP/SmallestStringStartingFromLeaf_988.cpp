@@ -37,7 +37,7 @@ class Solution {
   private:
     std::string recurse(TreeNode *node, std::string curr) {
         if (node == nullptr) {
-            return "";
+            return "~";
         }
         curr = (char)(node->val + 'a') + curr;
         if (node->left == nullptr && node->right == nullptr) {
@@ -47,11 +47,6 @@ class Solution {
         std::string left  = recurse(node->left, curr);
         std::string right = recurse(node->right, curr);
 
-        if (left.empty()) {
-            return right;
-        } else if (right.empty()) {
-            return left;
-        }
         return std::min(left, right);
     }
 };
