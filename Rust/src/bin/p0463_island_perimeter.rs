@@ -38,18 +38,11 @@ impl Solution {
                     continue;
                 }
                 perimeter += 4;
-
                 if i > 0 && grid[i - 1][j] == 1 {
-                    perimeter -= 1;
-                }
-                if i < grid.len() - 1 && grid[i + 1][j] == 1 {
-                    perimeter -= 1;
+                    perimeter -= 2;
                 }
                 if j > 0 && grid[i][j - 1] == 1 {
-                    perimeter -= 1;
-                }
-                if j < grid[0].len() - 1 && grid[i][j + 1] == 1 {
-                    perimeter -= 1;
+                    perimeter -= 2;
                 }
             }
         }
