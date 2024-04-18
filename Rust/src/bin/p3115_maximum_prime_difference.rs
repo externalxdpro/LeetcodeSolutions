@@ -25,16 +25,25 @@ pub struct Solution {}
 
 impl Solution {
     pub fn maximum_prime_difference(nums: Vec<i32>) -> i32 {
-        fn is_prime(i: &(usize, &i32)) -> bool {
-            let primes = vec![
-                2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79,
-                83, 89, 97,
-            ];
-            primes.into_iter().find(|x| x == i.1).is_some()
-        }
+        let is_primes = [
+            false, false, true, true, false, true, false, true, false, false, false, true, false,
+            true, false, false, false, true, false, true, false, false, false, true, false, false,
+            false, false, false, true, false, true, false, false, false, false, false, true, false,
+            false, false, true, false, true, false, false, false, true, false, false, false, false,
+            false, true, false, false, false, false, false, true, false, true, false, false, false,
+            false, false, true, false, false, false, true, false, true, false, false, false, false,
+            false, true, false, false, false, true, false, false, false, false, false, true, false,
+            false, false, false, false, false, false, true, false, false, false,
+        ];
 
-        let a = nums.iter().enumerate().find(is_prime).unwrap().0;
-        let b = nums.iter().enumerate().rfind(is_prime).unwrap().0;
+        let (mut a, mut b) = (nums.len(), 0usize);
+
+        for (i, x) in nums.into_iter().enumerate() {
+            if is_primes[x as usize] {
+                a = a.min(i);
+                b = b.max(i);
+            }
+        }
         (b - a) as i32
     }
 }
