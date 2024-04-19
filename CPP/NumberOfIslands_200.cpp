@@ -30,7 +30,6 @@
 //     1 <= m, n <= 300
 //     grid[i][j] is '0' or '1'.
 
-#include <algorithm>
 #include <fmt/ranges.h>
 #include <vector>
 
@@ -42,7 +41,7 @@ class Solution {
             for (int j = 0; j < grid[0].size(); j++) {
                 if (grid[i][j] == '1') {
                     result++;
-                    dfs(grid, i, j);
+                    remove(grid, i, j);
                 }
             }
         }
@@ -51,19 +50,16 @@ class Solution {
     }
 
   private:
-    bool inside(std::vector<std::vector<char>> &grid, int i, int j) {
-        return i >= 0 && i < grid.size() && j >= 0 && j < grid[0].size();
-    }
-
-    void dfs(std::vector<std::vector<char>> &grid, int i, int j) {
-        if (!inside(grid, i, j) || grid[i][j] != '1') {
+    void remove(std::vector<std::vector<char>> &grid, int i, int j) {
+        if (i < 0 || i >= grid.size() || j < 0 || j >= grid[0].size() ||
+            grid[i][j] != '1') {
             return;
         }
         grid[i][j] = ' ';
-        dfs(grid, i + 1, j);
-        dfs(grid, i - 1, j);
-        dfs(grid, i, j + 1);
-        dfs(grid, i, j - 1);
+        remove(grid, i + 1, j);
+        remove(grid, i - 1, j);
+        remove(grid, i, j + 1);
+        remove(grid, i, j - 1);
     }
 };
 
