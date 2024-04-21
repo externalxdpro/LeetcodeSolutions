@@ -34,34 +34,48 @@
 //     There are no self edges.
 
 #include <fmt/ranges.h>
-#include <unordered_map>
-#include <unordered_set>
+#include <numeric>
+#include <utility>
 #include <vector>
 
 class Solution {
   public:
     bool validPath(int n, std::vector<std::vector<int>> &edges, int source,
                    int destination) {
-        std::unordered_map<int, std::vector<int>> map;
-        std::unordered_set<int>                   travelled;
-        for (std::vector<int> edge : edges) {
-            map[edge[0]].push_back(edge[1]);
-            map[edge[1]].push_back(edge[0]);
+        std::vector<int> rank(n, 1);
+        std::vector<int> root(n);
+        std::iota(root.begin(), root.end(), 0);
+        for (auto edge : edges) {
+            unionFind(edge[0], edge[1], root, rank);
         }
-        dfs(source, map, travelled);
-        return travelled.contains(destination);
+        return connected(source, destination, root);
     }
 
   private:
-    void dfs(int i, std::unordered_map<int, std::vector<int>> &map,
-             std::unordered_set<int> &travelled) {
-        if (travelled.contains(i)) {
+    int find(int x, std::vector<int> &root) {
+        if (x == root[x]) {
+            return x;
+        }
+        return root[x] = find(root[x], root);
+    }
+
+    void unionFind(int x, int y, std::vector<int> &root,
+                   std::vector<int> &rank) {
+        int rX = find(x, root), rY = find(y, root);
+        if (rX == rY) {
             return;
         }
-        travelled.insert(i);
-        for (int j : map[i]) {
-            dfs(j, map, travelled);
+        if (rank[rX] > rank[rY]) {
+            std::swap(rX, rY);
         }
+        root[rX] = rY;
+        if (rank[rX] == rank[rY]) {
+            rank[rY]++;
+        }
+    }
+
+    bool connected(int x, int y, std::vector<int> &root) {
+        return find(x, root) == find(y, root);
     }
 };
 
@@ -71,7 +85,7 @@ int main(int argc, char *argv[]) {
         tests = {
             {{3, {{0, 1}, {1, 2}, {2, 0}}, 0, 2}, true},
             {{6, {{0, 1}, {0, 2}, {3, 5}, {5, 4}, {4, 3}}, 0, 5}, false},
-            {{0, {}, 0, 0}, true},
+            {{1, {}, 0, 0}, true},
         };
 
     Solution solution;
