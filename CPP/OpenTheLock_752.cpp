@@ -41,52 +41,45 @@
 //     target will not be in the list deadends.
 //     target and deadends[i] consist of digits only.
 
-#include <algorithm>
 #include <fmt/ranges.h>
 #include <queue>
-#include <unordered_set>
 #include <vector>
 
 class Solution {
   public:
     int openLock(std::vector<std::string> &deadends, std::string target) {
-        std::unordered_set<std::string> seen(deadends.begin(), deadends.end());
-        if (seen.contains("0000")) {
-            return -1;
-        }
         if (target == "0000") {
             return 0;
         }
 
-        int                     res = 0;
-        std::queue<std::string> q({"0000"});
+        std::queue<int> q({0});
+        bool            seen[10000] = {false};
+        for (const std::string &d : deadends) {
+            seen[std::stoi(d)] = true;
+        }
+        if (seen[0]) {
+            return -1;
+        }
+        int t = std::stoi(target);
 
-        while (!q.empty()) {
-            res++;
+        for (int res = 1; q.size(); res++) {
             for (int size = q.size(); size > 0; size--) {
-                std::string front = q.front();
+                int front = q.front();
                 q.pop();
-                for (int i = 0; i < 4; i++) {
-                    char temp = front[i];
-                    front[i]  = front[i] == '9' ? '0' : front[i] + 1;
-                    if (front == target) {
-                        return res;
+                for (int i = 1; i < 10000; i *= 10) {
+                    int mask   = front % (i * 10) / i;
+                    int masked = front - (mask * i);
+                    for (int j = 1; j < 10; j += 8) {
+                        int next = masked + (mask + j) % 10 * i;
+                        if (seen[next]) {
+                            continue;
+                        }
+                        if (next == t) {
+                            return res;
+                        }
+                        seen[next] = true;
+                        q.push(next);
                     }
-                    if (!seen.contains(front)) {
-                        q.push(front);
-                        seen.insert(front);
-                    }
-
-                    front[i] = temp;
-                    front[i] = front[i] == '0' ? '9' : front[i] - 1;
-                    if (front == target) {
-                        return res;
-                    }
-                    if (!seen.contains(front)) {
-                        q.push(front);
-                        seen.insert(front);
-                    }
-                    front[i] = temp;
                 }
             }
         }
