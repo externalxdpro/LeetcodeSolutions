@@ -34,61 +34,54 @@
 //     The given input is guaranteed to be a tree and there will be no repeated
 //     edges.
 
-// [#] Name
-// Difficulty:
-
-// Description
-
-#include <algorithm>
 #include <fmt/ranges.h>
-#include <unordered_map>
-#include <unordered_set>
+#include <queue>
 #include <vector>
 
-// Recursive
 class Solution {
   public:
     std::vector<int> findMinHeightTrees(int                            n,
                                         std::vector<std::vector<int>> &edges) {
-        std::vector<std::vector<int>> map(n);
+        if (n == 1) {
+            return {0};
+        }
+        std::vector<std::vector<int>> e(n);
+        std::vector<int>              degree(n);
         for (std::vector<int> &edge : edges) {
-            map[edge[0]].push_back(edge[1]);
-            map[edge[1]].push_back(edge[0]);
+            e[edge[0]].push_back(edge[1]);
+            e[edge[1]].push_back(edge[0]);
+            degree[edge[0]]++;
+            degree[edge[1]]++;
         }
 
-        std::unordered_set<int> found;
-        std::vector<int>        heights;
-        heights.reserve(n);
-        for (int i = 0; i < map.size(); i++) {
-            found.clear();
-            heights.push_back(height(map, i, found) - 1);
-        }
-
-        int min = *std::min_element(heights.begin(), heights.end());
-        std::vector<int> result;
-        result.reserve(n);
-        for (int i = 0; i < heights.size(); i++) {
-            if (heights[i] == min) {
-                result.push_back(i);
+        std::queue<int> leaves;
+        for (int i = 0; i < n; i++) {
+            if (degree[i] == 1) {
+                leaves.push(i);
             }
         }
+
+        while (n > 2) {
+            int size = leaves.size();
+            n -= size;
+            for (int i = 0; i < size; i++) {
+                int leaf = leaves.front();
+                leaves.pop();
+                for (int edge : e[leaf]) {
+                    if (--degree[edge] == 1) {
+                        leaves.push(edge);
+                    }
+                }
+            }
+        }
+
+        std::vector<int> result;
+        result.reserve(leaves.size());
+        while (!leaves.empty()) {
+            result.push_back(leaves.front());
+            leaves.pop();
+        }
         return result;
-    }
-
-  private:
-    int height(std::vector<std::vector<int>> &edges, int curr,
-               std::unordered_set<int> &found) {
-        if (found.contains(curr) || edges[curr].empty()) {
-            return 0;
-        }
-        found.insert(curr);
-        std::vector<int> heights;
-        heights.reserve(edges.size());
-        for (int edge : edges[curr]) {
-            heights.push_back(height(edges, edge, found));
-        }
-
-        return 1 + *std::max_element(heights.begin(), heights.end());
     }
 };
 
