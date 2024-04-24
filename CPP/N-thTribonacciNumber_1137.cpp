@@ -26,29 +26,24 @@
 #include <unordered_map>
 #include <vector>
 
-// Recursive
+// Iterative
 class Solution {
   public:
     int tribonacci(int n) {
-        std::unordered_map<int, int> memo;
-        return recurse(n, memo);
-    }
-
-  private:
-    int recurse(int n, std::unordered_map<int, int> &memo) {
-        if (n == 0) {
-            return 0;
-        }
-        if (n == 1 || n == 2) {
-            return 1;
-        }
-        if (memo[n]) {
-            return memo[n];
+        if (n < 2) {
+            return n;
         }
 
-        memo[n] =
-            recurse(n - 1, memo) + recurse(n - 2, memo) + recurse(n - 3, memo);
-        return memo[n];
+        int a = 0, b = 1, c = 1, t;
+        while (n > 2) {
+            t = a + b + c;
+            a = b;
+            b = c;
+            c = t;
+            n--;
+        }
+
+        return c;
     }
 };
 
