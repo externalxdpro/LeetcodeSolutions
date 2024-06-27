@@ -28,23 +28,23 @@
 
 #include <algorithm>
 #include <fmt/ranges.h>
-#include <unordered_map>
 #include <vector>
 
 class Solution {
   public:
     int findCenter(std::vector<std::vector<int>> &edges) {
-        std::unordered_map<int, std::vector<int>> e;
+        int e[100000] = {0};
 
         for (std::vector<int> edge : edges) {
-            e[edge[0]].push_back(edge[1]);
-            e[edge[1]].push_back(edge[0]);
-        }
-
-        for (auto [k, v] : e) {
-            if (v.size() > 1) {
-                return k;
+            if (e[edge[0]] != 0) {
+                return edge[0];
             }
+            e[edge[0]] = edge[1];
+
+            if (e[edge[1]] != 0) {
+                return edge[1];
+            }
+            e[edge[1]] = edge[0];
         }
 
         return -1;
