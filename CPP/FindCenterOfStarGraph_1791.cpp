@@ -33,21 +33,11 @@
 class Solution {
   public:
     int findCenter(std::vector<std::vector<int>> &edges) {
-        int e[100000] = {0};
-
-        for (std::vector<int> edge : edges) {
-            if (e[edge[0]] != 0) {
-                return edge[0];
-            }
-            e[edge[0]] = edge[1];
-
-            if (e[edge[1]] != 0) {
-                return edge[1];
-            }
-            e[edge[1]] = edge[0];
+        if (edges[0][0] == edges[1][0] || edges[0][0] == edges[1][1]) {
+            return edges[0][0];
+        } else {
+            return edges[0][1];
         }
-
-        return -1;
     }
 };
 
