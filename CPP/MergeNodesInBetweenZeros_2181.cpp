@@ -41,23 +41,26 @@
 class Solution {
   public:
     ListNode *mergeNodes(ListNode *head) {
-        int       count  = 0;
-        ListNode *result = new ListNode(0), *curr = result;
+        ListNode *bbfr = head, *bfr = head, *curr = head->next;
+        int       sum = 0;
 
-        while (head != nullptr) {
-            if (head->val == 0) {
-                curr->next = new ListNode(count);
-                curr       = curr->next;
-                count      = 0;
+        while (curr != nullptr) {
+            if (curr->val == 0) {
+                curr->val = sum;
+                sum       = 0;
+
+                bbfr->next = curr;
+                bbfr       = bbfr->next;
             } else {
-                count += head->val;
+                sum += curr->val;
             }
 
-            head = head->next;
+            bfr  = bfr->next;
+            curr = curr->next;
         }
 
-        result = result->next->next;
-        return result;
+        head = head->next;
+        return head;
     }
 };
 
