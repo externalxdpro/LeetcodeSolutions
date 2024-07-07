@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
     // Solution solution;
     // for (auto &[test, ans] : tests) {
     //     auto result = solution.funcName(test);
-    //     fmt::print("{} {}: {}\n", result == ans ? "✅" : "❌", test, result);
+    //     fmt::println("{} {}: {}", result == ans ? "✅" : "❌", test, result);
     // }
 
     return 0;
