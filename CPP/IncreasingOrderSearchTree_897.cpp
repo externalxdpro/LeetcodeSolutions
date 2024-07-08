@@ -26,20 +26,23 @@
 class Solution {
   public:
     TreeNode *increasingBST(TreeNode *root) {
-        TreeNode               *head = new TreeNode(), *curr = head;
         std::vector<TreeNode *> nodes;
 
         traverse(root, nodes);
 
+        for (auto node : nodes) {
+            std::cout << node->val << std::endl;
+        }
+
         for (int i = 0; i < nodes.size() - 1; i++) {
             TreeNode *node = nodes[i];
-            curr->val      = node->val;
-            curr->right    = new TreeNode();
-            curr           = curr->right;
+            node->left     = nullptr;
+            node->right    = nodes[i + 1];
         }
-        curr->val = nodes.back()->val;
+        nodes.back()->left  = nullptr;
+        nodes.back()->right = nullptr;
 
-        return head;
+        return nodes.front();
     }
 
   private:
