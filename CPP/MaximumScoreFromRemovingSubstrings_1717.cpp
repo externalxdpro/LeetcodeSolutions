@@ -39,24 +39,31 @@
 class Solution {
   public:
     int maximumGain(std::string s, int x, int y) {
-        int pos, score = 0;
+        int a = 0, b = 0, lesser = std::min(x, y), result = 0;
 
-        while (true) {
-            bool greater = true;
-            int  pos     = x > y ? s.find("ab") : s.find("ba");
-            if (pos == std::string::npos) {
-                pos     = x < y ? s.find("ab") : s.find("ba");
-                greater = false;
-                if (pos == std::string::npos) {
-                    break;
+        for (char c : s) {
+            if (c > 'b') {
+                result += std::min(a, b) * lesser;
+                a = 0, b = 0;
+            } else if (c == 'a') {
+                if (x < y && b > 0) {
+                    b--;
+                    result += y;
+                } else {
+                    a++;
+                }
+            } else {
+                if (x > y && a > 0) {
+                    a--;
+                    result += x;
+                } else {
+                    b++;
                 }
             }
-
-            s.erase(pos, 2);
-            score += greater ? std::max(x, y) : std::min(x, y);
         }
 
-        return score;
+        result += std::min(a, b) * lesser;
+        return result;
     }
 };
 
