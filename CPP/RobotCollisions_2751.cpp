@@ -59,52 +59,43 @@ class Solution {
     std::vector<int> survivedRobotsHealths(std::vector<int> &positions,
                                            std::vector<int> &healths,
                                            std::string       directions) {
-        std::vector<int>   stack;
-        std::vector<tuple> robots(positions.size());
-
+        std::vector<std::pair<int, int>> robots(positions.size());
         for (int i = 0; i < positions.size(); i++) {
-            robots[i] = {positions[i], healths[i], directions[i], i};
+            robots[i] = {positions[i], i};
         }
-        std::sort(robots.begin(), robots.end(),
-                  [](tuple a, tuple b) { return a.pos < b.pos; });
+        std::sort(robots.begin(), robots.end(), std::greater<>());
 
-        for (int i = 0; i < positions.size(); i++) {
-            if (robots[i].dir == 'L') {
-                while (!stack.empty() && robots[stack.back()].dir == 'R' &&
-                       robots[stack.back()].hp < robots[i].hp) {
-                    stack.pop_back();
-                    robots[i].hp--;
-                }
-                if (stack.empty() || robots[stack.back()].dir == 'L') {
-                    stack.push_back(i);
-                } else if (!stack.empty() &&
-                           robots[stack.back()].hp == robots[i].hp) {
-                    stack.pop_back();
-                } else if (!stack.empty() &&
-                           robots[stack.back()].hp > robots[i].hp) {
-                    robots[stack.back()].hp--;
-                }
-            } else {
+        std::vector<int> stack;
+        for (auto &[pos, i] : robots) {
+            if (directions[i] == 'L') {
                 stack.push_back(i);
+            } else {
+                while (!stack.empty() && healths[i] > 0) {
+                    int back = stack.back();
+                    int diff = healths[back] - healths[i];
+                    if (diff > 0) {
+                        healths[back]--;
+                        healths[i] = 0;
+                    } else if (diff < 0) {
+                        healths[back] = 0;
+                        healths[i]--;
+                        stack.pop_back();
+                    } else {
+                        healths[i] = healths[back] = 0;
+                        stack.pop_back();
+                    }
+                }
             }
         }
 
-        std::sort(stack.begin(), stack.end(), [robots](int a, int b) {
-            return robots[a].origI < robots[b].origI;
-        });
-        std::transform(stack.begin(), stack.end(), stack.begin(),
-                       [robots](int i) { return robots[i].hp; });
-
-        return stack;
+        std::vector<int> result;
+        for (int h : healths) {
+            if (h > 0) {
+                result.push_back(h);
+            }
+        }
+        return result;
     }
-
-  private:
-    struct tuple {
-        int pos;
-        int hp;
-        int dir;
-        int origI;
-    };
 };
 
 int main(int argc, char *argv[]) {
