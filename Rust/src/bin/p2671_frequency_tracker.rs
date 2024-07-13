@@ -55,50 +55,44 @@
 
 // submission codes start here
 
-use std::collections::HashMap;
-
 struct FrequencyTracker {
-    elems: HashMap<i32, i32>,
-    freqs: HashMap<i32, i32>,
+    elems: Vec<usize>,
+    freqs: Vec<usize>,
 }
 
 impl FrequencyTracker {
     fn new() -> Self {
-        FrequencyTracker {
-            elems: HashMap::new(),
-            freqs: HashMap::new(),
+        Self {
+            elems: vec![0; 100001],
+            freqs: vec![0; 100001],
         }
     }
 
     fn add(&mut self, num: i32) {
-        let val = *self.elems.get(&num).unwrap_or(&0);
+        let num = num as usize;
+        let val = self.elems[num];
 
         if val != 0 {
-            self.freqs.entry(val).and_modify(|x| *x -= 1).or_insert(0);
+            self.freqs[val] = self.freqs[val].saturating_sub(1);
         }
-        self.freqs
-            .entry(val + 1)
-            .and_modify(|x| *x += 1)
-            .or_insert(1);
-        self.elems.entry(num).and_modify(|x| *x += 1).or_insert(1);
+        self.freqs[val + 1] += 1;
+        self.elems[num] += 1;
     }
 
     fn delete_one(&mut self, num: i32) {
-        let val = *self.elems.get(&num).unwrap_or(&0);
+        let num = num as usize;
+        let val = self.elems[num];
         if val == 0 {
             return;
         }
 
-        self.freqs.entry(val).and_modify(|x| *x -= 1).or_insert(0);
-        self.freqs
-            .entry(val - 1)
-            .and_modify(|x| *x += 1)
-            .or_insert(1);
-        self.elems.entry(num).and_modify(|x| *x -= 1).or_insert(0);
+        self.freqs[val] = self.freqs[val].saturating_sub(1);
+        self.freqs[val - 1] += 1;
+        self.elems[num] = self.elems[num].saturating_sub(1);
     }
 
     fn has_frequency(&self, frequency: i32) -> bool {
-        return *self.freqs.get(&frequency).unwrap_or(&0) > 0;
+        return self.freqs[frequency as usize] > 0;
     }
 }
 
