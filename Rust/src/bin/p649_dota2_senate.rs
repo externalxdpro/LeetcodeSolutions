@@ -37,25 +37,27 @@ pub struct Solution {}
 
 impl Solution {
     pub fn predict_party_victory(senate: String) -> String {
-        let mut queue: Vec<char> = senate.chars().collect();
+        use std::collections::VecDeque;
+        let (mut rq, mut dq): (VecDeque<_>, VecDeque<_>) =
+            senate.char_indices().partition(|(_, c)| *c == 'R');
 
-        while queue.iter().position(|&x| x == 'R') != None
-            && queue.iter().position(|&x| x == 'D') != None
-        {
-            if let Some('R') = queue.first() {
-                queue.remove(queue.iter().position(|&x| x == 'D').unwrap());
-            } else if let Some('D') = queue.first() {
-                queue.remove(queue.iter().position(|&x| x == 'R').unwrap());
+        let mut curr = senate.len();
+        while !rq.is_empty() && !dq.is_empty() {
+            let (r, d) = (rq.pop_front().unwrap().0, dq.pop_front().unwrap().0);
+
+            if r <= d {
+                rq.push_back((curr, 'R'));
+            } else {
+                dq.push_back((curr, 'D'));
             }
 
-            queue.push(*queue.first().unwrap());
-            queue.remove(0);
+            curr += 1;
         }
 
-        if queue.iter().position(|&x| x == 'R') != None {
-            "Radiant".to_string()
-        } else {
+        if rq.is_empty() {
             "Dire".to_string()
+        } else {
+            "Radiant".to_string()
         }
     }
 }
