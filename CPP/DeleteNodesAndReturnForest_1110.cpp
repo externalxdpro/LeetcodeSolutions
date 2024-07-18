@@ -23,51 +23,49 @@
 
 #include "_BinaryTree.hpp"
 
-#include <algorithm>
 #include <fmt/ranges.h>
-#include <iostream>
-#include <set>
+#include <unordered_set>
 #include <vector>
 
 class Solution {
   public:
     std::vector<TreeNode *> delNodes(TreeNode         *root,
                                      std::vector<int> &to_delete) {
-        bool                    toDelete[1001];
+        std::unordered_set<int> toDelete(to_delete.begin(), to_delete.end());
         std::vector<TreeNode *> result;
-        for (int i : to_delete) {
-            toDelete[i] = true;
+
+        root = dfs(root, toDelete, result);
+        if (root) {
+            result.push_back(root);
         }
-        dfs(root, nullptr, true, toDelete, result);
+
         return result;
     }
 
   private:
-    void dfs(TreeNode *node, TreeNode *parent, bool isLeft, bool toDelete[],
-             std::vector<TreeNode *> &result) {
+    TreeNode *dfs(TreeNode *node, std::unordered_set<int> &toDelete,
+                  std::vector<TreeNode *> &result) {
         if (node == nullptr) {
-            return;
+            return nullptr;
         }
+        TreeNode *l = dfs(node->left, toDelete, result);
+        TreeNode *r = dfs(node->right, toDelete, result);
 
-        if (toDelete[node->val]) {
-            if (parent) {
-                if (isLeft) {
-                    parent->left = nullptr;
-                } else {
-                    parent->right = nullptr;
-                }
+        node->left  = l;
+        node->right = r;
+
+        if (toDelete.contains(node->val)) {
+            if (node->left) {
+                result.push_back(node->left);
             }
-            dfs(node->left, nullptr, true, toDelete, result);
-            dfs(node->right, nullptr, false, toDelete, result);
+            if (node->right) {
+                result.push_back(node->right);
+            }
             delete node;
-        } else {
-            if (parent == nullptr) {
-                result.push_back(node);
-            }
-
-            dfs(node->left, node, true, toDelete, result);
-            dfs(node->right, node, false, toDelete, result);
+            return nullptr;
         }
+
+        return node;
     }
 };
 
