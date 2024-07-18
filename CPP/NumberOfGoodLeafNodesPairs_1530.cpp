@@ -36,7 +36,7 @@
 
 class Solution {
   public:
-    int countPairs(TreeNode *root, int distance) {
+    int countPairs(const TreeNode *root, const int distance) {
         int result = 0;
         dfs(root, distance, result);
 
@@ -44,7 +44,8 @@ class Solution {
     }
 
   private:
-    std::vector<int> dfs(TreeNode *node, int distance, int &result) {
+    std::vector<int> dfs(const TreeNode *node, const int distance,
+                         int &result) {
         if (node == nullptr) {
             return {};
         }
@@ -52,8 +53,8 @@ class Solution {
             return {1};
         }
 
-        std::vector<int> left  = dfs(node->left, distance, result);
-        std::vector<int> right = dfs(node->right, distance, result);
+        const std::vector<int> &left  = dfs(node->left, distance, result);
+        const std::vector<int> &right = dfs(node->right, distance, result);
 
         for (int l : left) {
             for (int r : right) {
