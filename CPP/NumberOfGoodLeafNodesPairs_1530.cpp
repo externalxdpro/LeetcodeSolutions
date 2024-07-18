@@ -32,54 +32,50 @@
 #include "_BinaryTree.hpp"
 
 #include <fmt/ranges.h>
-#include <unordered_map>
 #include <vector>
 
 class Solution {
   public:
     int countPairs(TreeNode *root, int distance) {
-        std::unordered_map<TreeNode *, std::vector<TreeNode *>> map;
-        std::vector<TreeNode *>                                 leaves, trail;
-        findLeaves(root, trail, leaves, map);
         int result = 0;
-
-        for (int i = 0; i < leaves.size(); i++) {
-            for (int j = i + 1; j < leaves.size(); j++) {
-                std::vector<TreeNode *> iVec = map[leaves[i]];
-                std::vector<TreeNode *> jVec = map[leaves[j]];
-
-                for (int k = 0; k < std::min(iVec.size(), jVec.size()); k++) {
-                    if (iVec[k] != jVec[k]) {
-                        int dist = iVec.size() - k + jVec.size() - k;
-                        if (dist <= distance)
-                            result++;
-                        break;
-                    }
-                }
-            }
-        }
+        dfs(root, distance, result);
 
         return result;
     }
 
   private:
-    void
-    findLeaves(TreeNode *node, std::vector<TreeNode *> &trail,
-               std::vector<TreeNode *>                                 &leaves,
-               std::unordered_map<TreeNode *, std::vector<TreeNode *>> &map) {
+    std::vector<int> dfs(TreeNode *node, int distance, int &result) {
         if (node == nullptr) {
-            return;
+            return {};
+        }
+        if (node->left == nullptr && node->right == nullptr) {
+            return {1};
         }
 
-        std::vector<TreeNode *> temp(trail.begin(), trail.end());
-        temp.push_back(node);
-        if (node->left == nullptr && node->right == nullptr) {
-            map[node] = temp;
-            leaves.push_back(node);
-            return;
+        std::vector<int> left  = dfs(node->left, distance, result);
+        std::vector<int> right = dfs(node->right, distance, result);
+
+        for (int l : left) {
+            for (int r : right) {
+                if (l + r <= distance) {
+                    result++;
+                }
+            }
         }
-        findLeaves(node->left, temp, leaves, map);
-        findLeaves(node->right, temp, leaves, map);
+
+        std::vector<int> res;
+        for (int l : left) {
+            if (l + 1 <= distance) {
+                res.push_back(l + 1);
+            }
+        }
+        for (int r : right) {
+            if (r + 1 <= distance) {
+                res.push_back(r + 1);
+            }
+        }
+
+        return res;
     }
 };
 
