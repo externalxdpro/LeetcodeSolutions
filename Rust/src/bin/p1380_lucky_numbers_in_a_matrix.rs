@@ -34,20 +34,33 @@ pub struct Solution {}
 
 impl Solution {
     pub fn lucky_numbers(matrix: Vec<Vec<i32>>) -> Vec<i32> {
-        let max: Vec<i32> = (0..matrix[0].len())
-            .map(|i| matrix.iter().map(|x| x[i]).max().unwrap())
-            .collect();
-        let min: Vec<i32> = matrix.iter().map(|x| *x.iter().min().unwrap()).collect();
+        let (m, n) = (matrix.len(), matrix[0].len());
+        let (mut min, mut max) = (Vec::with_capacity(m), Vec::with_capacity(n));
 
-        let mut res: Vec<i32> = vec![];
-        for i in 0..matrix.len() {
-            for j in 0..matrix[0].len() {
-                if matrix[i][j] == min[i] && matrix[i][j] == max[j] {
-                    res.push(matrix[i][j]);
+        for i in 0..m {
+            let mut curr = matrix[i][0];
+            for j in 1..n {
+                curr = curr.min(matrix[i][j]);
+            }
+            min.push(curr);
+        }
+        for j in 0..n {
+            let mut curr = matrix[0][j];
+            for i in 1..m {
+                curr = curr.max(matrix[i][j]);
+            }
+            max.push(curr);
+        }
+
+        let mut res = vec![];
+        for i in 0..m {
+            for j in 0..n {
+                let curr = matrix[i][j];
+                if (curr == min[i] && curr == max[j]) {
+                    res.push(curr);
                 }
             }
         }
-
         res
     }
 }
