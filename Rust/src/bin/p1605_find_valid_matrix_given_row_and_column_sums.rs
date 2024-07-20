@@ -38,15 +38,13 @@ impl Solution {
         let (r, c) = (row_sum.len(), col_sum.len());
         let mut matrix = vec![vec![0; c]; r];
 
-        let (mut i, mut j) = (0, 0);
-        while i < r && j < c {
-            let x = row_sum[i].min(col_sum[j]);
-            matrix[i][j] = x;
-            row_sum[i] -= x;
-            col_sum[j] -= x;
-
-            i += (row_sum[i] == 0) as usize;
-            j += (col_sum[j] == 0) as usize;
+        for i in 0..r {
+            for j in 0..c {
+                let x = row_sum[i].min(col_sum[j]);
+                matrix[i][j] = x;
+                row_sum[i] -= x;
+                col_sum[j] -= x;
+            }
         }
 
         matrix
