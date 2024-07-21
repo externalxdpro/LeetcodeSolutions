@@ -50,8 +50,8 @@ impl Solution {
         use std::collections::HashMap;
 
         let k = k as usize;
-        let row_order = Solution::generate_topo_sort(row_conditions, k);
-        let col_order = Solution::generate_topo_sort(col_conditions, k);
+        let row_order = Self::generate_topo_sort(row_conditions, k);
+        let col_order = Self::generate_topo_sort(col_conditions, k);
 
         if row_order.len() < k || col_order.len() < k {
             return vec![];
@@ -69,7 +69,7 @@ impl Solution {
         ans
     }
 
-    pub fn generate_topo_sort(a: Vec<Vec<i32>>, k: usize) -> Vec<i32> {
+    fn generate_topo_sort(a: Vec<Vec<i32>>, k: usize) -> Vec<i32> {
         use std::collections::VecDeque;
 
         let mut deg: Vec<i32> = vec![0; k];
