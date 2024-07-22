@@ -29,9 +29,9 @@ pub struct Solution {}
 
 impl Solution {
     pub fn sort_people(names: Vec<String>, heights: Vec<i32>) -> Vec<String> {
-        let mut zipped: Vec<(i32, String)> = heights.into_iter().zip(names).collect();
-        zipped.sort_unstable_by(|a, b| b.cmp(a));
-        zipped.into_iter().map(|x| x.1).collect()
+        use std::collections::BTreeSet;
+        let zipped: BTreeSet<(i32, String)> = heights.into_iter().zip(names).collect();
+        zipped.into_iter().map(|x| x.1).rev().collect()
     }
 }
 
