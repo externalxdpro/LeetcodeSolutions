@@ -28,14 +28,11 @@ pub struct Solution {}
 
 impl Solution {
     pub fn frequency_sort(mut nums: Vec<i32>) -> Vec<i32> {
-        use std::collections::HashMap;
-
-        let mut map: HashMap<i32, usize> = HashMap::new();
+        let mut map = std::collections::HashMap::new();
         for &i in nums.iter() {
             map.entry(i).and_modify(|x| *x += 1).or_insert(1);
         }
-
-        nums.sort_by(|a, b| map.get(a).unwrap().cmp(map.get(b).unwrap()).then(b.cmp(a)));
+        nums.sort_by_key(|&x| (map.get(&x).unwrap(), -x));
         nums
     }
 }
