@@ -27,34 +27,16 @@ pub struct Solution {}
 // submission codes start here
 
 impl Solution {
-    pub fn frequency_sort(nums: Vec<i32>) -> Vec<i32> {
-        use std::collections::{BTreeMap, BTreeSet};
+    pub fn frequency_sort(mut nums: Vec<i32>) -> Vec<i32> {
+        use std::collections::HashMap;
 
-        let mut map: BTreeMap<i32, usize> = BTreeMap::new();
+        let mut map: HashMap<i32, usize> = HashMap::new();
         for &i in nums.iter() {
             map.entry(i).and_modify(|x| *x += 1).or_insert(1);
         }
 
-        let mut freqs: BTreeMap<usize, BTreeSet<i32>> = BTreeMap::new();
-        for &k in map.keys() {
-            let v = *map.get(&k).unwrap();
-            freqs
-                .entry(v)
-                .and_modify(|x| {
-                    x.insert(k);
-                })
-                .or_insert(BTreeSet::from([k]));
-        }
-
-        let mut sorted: Vec<i32> = Vec::with_capacity(nums.len());
-        for k in freqs.keys() {
-            let v = freqs.get(k).unwrap();
-            for &i in v.iter().rev() {
-                sorted.append(&mut vec![i; *k]);
-            }
-        }
-
-        sorted
+        nums.sort_by(|a, b| map.get(a).unwrap().cmp(map.get(b).unwrap()).then(b.cmp(a)));
+        nums
     }
 }
 
