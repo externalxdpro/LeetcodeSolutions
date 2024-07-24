@@ -43,16 +43,23 @@ impl Solution {
 
         let mut map: BTreeMap<i32, i32> = BTreeMap::new();
         for &num in nums.iter() {
-            let str = num.to_string();
-            let mut mapped = String::with_capacity(str.len());
-            for c in str.chars() {
-                let index = char::to_digit(c, 10).unwrap() as usize;
-                mapped.push(char::from_digit(mapping[index] as u32, 10).unwrap());
+            if num == 0 {
+                map.insert(0, mapping[0]);
+                continue;
             }
-            map.insert(num, i32::from_str_radix(mapped.as_str(), 10).unwrap());
+
+            let mut orig_num = num;
+            let (mut mapped, mut zeros) = (0, 1);
+            while orig_num > 0 {
+                let rem = orig_num % 10;
+                orig_num /= 10;
+                mapped += zeros * mapping[rem as usize];
+                zeros *= 10;
+            }
+            map.insert(num, mapped);
         }
 
-        nums.sort_by_key(|x| map[x]);
+        nums.sort_unstable_by_key(|x| map[x]);
         nums
     }
 }
@@ -72,6 +79,13 @@ mod tests {
         assert_eq!(
             Solution::sort_jumbled(vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9], vec![789, 456, 123]),
             vec![123, 456, 789]
+        );
+        assert_eq!(
+            Solution::sort_jumbled(
+                vec![9, 8, 7, 6, 5, 4, 3, 2, 1, 0],
+                vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+            ),
+            vec![9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
         );
     }
 }
