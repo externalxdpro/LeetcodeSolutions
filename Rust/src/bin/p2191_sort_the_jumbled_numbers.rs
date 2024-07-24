@@ -39,27 +39,21 @@ pub struct Solution {}
 
 impl Solution {
     pub fn sort_jumbled(mapping: Vec<i32>, mut nums: Vec<i32>) -> Vec<i32> {
-        use std::collections::BTreeMap;
-
-        let mut map: BTreeMap<i32, i32> = BTreeMap::new();
-        for &num in nums.iter() {
+        let map = |mut num: i32| {
             if num == 0 {
-                map.insert(0, mapping[0]);
-                continue;
+                return mapping[0];
             }
-
-            let mut orig_num = num;
             let (mut mapped, mut zeros) = (0, 1);
-            while orig_num > 0 {
-                let rem = orig_num % 10;
-                orig_num /= 10;
+            while num > 0 {
+                let rem = num % 10;
+                num /= 10;
                 mapped += zeros * mapping[rem as usize];
                 zeros *= 10;
             }
-            map.insert(num, mapped);
-        }
+            mapped
+        };
 
-        nums.sort_unstable_by_key(|x| map[x]);
+        nums.sort_unstable_by_key(|&x| map(x));
         nums
     }
 }
