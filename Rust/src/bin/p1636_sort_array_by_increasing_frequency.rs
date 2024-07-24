@@ -44,7 +44,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_num() {
+    fn test_1636() {
         assert_eq!(
             Solution::frequency_sort(vec![1, 1, 2, 2, 2, 3]),
             vec![3, 1, 1, 2, 2, 2]
