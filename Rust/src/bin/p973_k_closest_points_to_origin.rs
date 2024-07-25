@@ -28,20 +28,10 @@ pub struct Solution {}
 // submission codes start here
 
 impl Solution {
-    pub fn k_closest(points: Vec<Vec<i32>>, k: i32) -> Vec<Vec<i32>> {
-        use std::collections::BinaryHeap;
-
-        let mut distances: BinaryHeap<(i32, Vec<i32>)> = BinaryHeap::new();
-        for p in points {
-            distances.push((p[0].pow(2) + p[1].pow(2), p));
-        }
-
-        distances
-            .into_sorted_vec()
-            .into_iter()
-            .take(k as usize)
-            .map(|(_, p)| p)
-            .collect()
+    pub fn k_closest(mut points: Vec<Vec<i32>>, k: i32) -> Vec<Vec<i32>> {
+        points.sort_unstable_by_key(|p| p[0].pow(2) + p[1].pow(2));
+        points.truncate(k as usize);
+        points
     }
 }
 
