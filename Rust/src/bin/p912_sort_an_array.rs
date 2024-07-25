@@ -24,31 +24,26 @@ pub struct Solution {}
 
 impl Solution {
     pub fn sort_array(nums: Vec<i32>) -> Vec<i32> {
-        if nums.len() < 2 {
-            return nums;
-        }
-        let l = Self::sort_array(nums[..nums.len() / 2].to_vec());
-        let r = Self::sort_array(nums[nums.len() / 2..].to_vec());
-        let mut result = vec![];
-        let (mut li, mut ri) = (0, 0);
-
-        loop {
-            if li >= l.len() && ri >= r.len() {
-                return result;
-            } else if li >= l.len() {
-                result.push(r[ri]);
-                ri += 1;
-            } else if ri >= r.len() {
-                result.push(l[li]);
-                li += 1;
-            } else if l[li] < r[ri] {
-                result.push(l[li]);
-                li += 1;
+        let min = i32::abs(*nums.iter().min().unwrap()) + 1;
+        let max = i32::abs(*nums.iter().max().unwrap()) + 1;
+        let (mut pos, mut neg) = (vec![0; max as usize], vec![0; min as usize]);
+        let mut result = Vec::with_capacity(nums.len());
+        for n in nums {
+            if n >= 0 {
+                pos[n as usize] += 1;
             } else {
-                result.push(r[ri]);
-                ri += 1;
+                neg[i32::abs(n) as usize] += 1;
             }
         }
+
+        for i in (0..min).rev() {
+            result.append(&mut vec![-i; neg[i as usize]]);
+        }
+        for i in 0..max {
+            result.append(&mut vec![i; pos[i as usize]]);
+        }
+
+        result
     }
 }
 
