@@ -1,31 +1,49 @@
-#include <algorithm>
 #include <fmt/ranges.h>
-#include <numeric>
-#include <unordered_set>
+#include <unordered_map>
 #include <vector>
 
 class Solution {
   public:
     std::vector<int> findSubstring(std::string               s,
                                    std::vector<std::string> &words) {
-        if (s.size() < words[0].size() * words.size()) {
+        if (words[0].size() > s.size()) {
             return {};
         }
 
-        std::unordered_set<std::string> substrings;
-        std::vector<std::string>        temp = words;
-        do {
-            substrings.insert(
-                std::accumulate(temp.begin(), temp.end(), std::string()));
-            std::ranges::next_permutation(temp);
-        } while (temp != words);
+        std::unordered_map<std::string, int> map;
+        std::vector<int>                     result;
+        const int                            length = words[0].size();
 
-        std::vector<int> result;
-        int              len = words[0].size() * words.size();
+        for (std::string &word : words) {
+            map[word]++;
+        }
 
-        for (int i = 0; i <= s.size() - words[0].size() * words.size(); i++) {
-            if (substrings.contains(s.substr(i, len))) {
-                result.push_back(i);
+        for (int offset = 0; offset < length; offset++) {
+            int                                  size = 0;
+            std::unordered_map<std::string, int> seen;
+
+            for (int i = offset; i <= s.size() - length; i += length) {
+                std::string substr = s.substr(i, length);
+
+                if (map.find(substr) == map.end()) {
+                    seen.clear();
+                    size = 0;
+                    continue;
+                }
+
+                seen[substr]++;
+                size++;
+
+                while (seen[substr] > map.find(substr)->second) {
+                    std::string first =
+                        s.substr(i - (size - 1) * length, length);
+                    seen[first]--;
+                    size--;
+                }
+
+                if (size == words.size()) {
+                    result.push_back(i - (size - 1) * length);
+                }
             }
         }
 
