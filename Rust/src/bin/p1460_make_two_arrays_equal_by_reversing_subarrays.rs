@@ -34,17 +34,10 @@ pub struct Solution {}
 // submission codes start here
 
 impl Solution {
-    pub fn can_be_equal(tar: Vec<i32>, arr: Vec<i32>) -> bool {
-        use std::collections::HashMap;
-
-        let mut tar_map: HashMap<i32, usize> = HashMap::new();
-        let mut arr_map: HashMap<i32, usize> = HashMap::new();
-        for i in 0..arr.len() {
-            tar_map.entry(tar[i]).and_modify(|x| *x += 1).or_insert(1);
-            arr_map.entry(arr[i]).and_modify(|x| *x += 1).or_insert(1);
-        }
-
-        tar_map == arr_map
+    pub fn can_be_equal(mut tar: Vec<i32>, mut arr: Vec<i32>) -> bool {
+        tar.sort_unstable();
+        arr.sort_unstable();
+        tar == arr
     }
 }
 
