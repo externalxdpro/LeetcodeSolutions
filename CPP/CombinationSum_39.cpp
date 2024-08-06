@@ -40,13 +40,15 @@ class Solution {
     std::vector<std::vector<int>> combinationSum(std::vector<int> &candidates,
                                                  int               target) {
         std::vector<std::vector<int>> result;
-        recurse(candidates, target, 0, 0, {}, result);
+        std::vector<int>              curr;
+        recurse(candidates, target, 0, 0, curr, result);
         return result;
     }
 
   private:
     void recurse(std::vector<int> &candidates, int target, int i, int sum,
-                 std::vector<int> curr, std::vector<std::vector<int>> &result) {
+                 std::vector<int>              &curr,
+                 std::vector<std::vector<int>> &result) {
         if (sum > target || i == candidates.size()) {
             return;
         } else if (sum == target) {
@@ -54,10 +56,13 @@ class Solution {
             return;
         }
 
-        recurse(candidates, target, i + 1, sum, curr, result);
         sum += candidates[i];
         curr.push_back(candidates[i]);
         recurse(candidates, target, i, sum, curr, result);
+
+        sum -= candidates[i];
+        curr.pop_back();
+        recurse(candidates, target, i + 1, sum, curr, result);
     }
 };
 
@@ -65,8 +70,8 @@ int main(int argc, char *argv[]) {
     std::vector<std::pair<std::pair<std::vector<int>, int>,
                           std::vector<std::vector<int>>>>
         tests = {
-            {{{2, 3, 6, 7}, 7}, {{7}, {2, 2, 3}}},
-            {{{2, 3, 5}, 8}, {{3, 5}, {2, 3, 3}, {2, 2, 2, 2}}},
+            {{{2, 3, 6, 7}, 7}, {{2, 2, 3}, {7}}},
+            {{{2, 3, 5}, 8}, {{2, 2, 2, 2}, {2, 3, 3}, {3, 5}}},
             {{{2}, 1}, {}},
         };
 
