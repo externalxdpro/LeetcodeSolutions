@@ -56,40 +56,16 @@ pub struct Solution {}
 
 impl Solution {
     pub fn minimum_pushes(word: String) -> i32 {
-        use std::collections::{BTreeMap, HashSet};
-        let mut freq: BTreeMap<char, usize> = BTreeMap::new();
+        let mut freqs: [usize; 26] = [0; 26];
         for c in word.chars() {
-            freq.entry(c).and_modify(|x| *x += 1).or_insert(1);
+            let i = c as usize - 'a' as usize;
+            freqs[i] += 1;
         }
-
-        let mut counts: BTreeMap<usize, HashSet<char>> = BTreeMap::new();
-        for k in freq.keys() {
-            let v = freq[k];
-            counts
-                .entry(v)
-                .and_modify(|x| {
-                    x.insert(*k);
-                })
-                .or_insert(HashSet::from([*k]));
-        }
-
-        let mut presses: BTreeMap<char, usize> = BTreeMap::new();
-        let (mut i, mut count) = (0, 1);
-        for k in counts.keys().rev() {
-            let v = &counts[k];
-            for &c in v {
-                presses.insert(c, count);
-                i += 1;
-                if i == 8 {
-                    i = 0;
-                    count += 1;
-                }
-            }
-        }
+        freqs.sort_unstable();
 
         let mut result = 0;
-        for c in word.chars() {
-            result += presses[&c];
+        for (i, v) in freqs.into_iter().rev().enumerate() {
+            result += v * (i / 8 + 1);
         }
 
         result as i32
