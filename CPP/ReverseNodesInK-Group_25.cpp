@@ -26,41 +26,47 @@
 
 #include "_LinkedList.hpp"
 
-#include <algorithm>
 #include <fmt/ranges.h>
 #include <vector>
 
 class Solution {
   public:
     ListNode *reverseKGroup(ListNode *head, int k) {
-        std::vector<int> nodes;
-        while (head != nullptr) {
-            nodes.push_back(head->val);
-            head = head->next;
+        ListNode *l = head, *r = head, *prev = nullptr;
+        for (int i = 0; i < k; i++) {
+            r = r->next;
         }
-        for (int i = 0; i <= nodes.size() - k; i += k) {
-            std::reverse(nodes.begin() + i, nodes.begin() + i + k);
+        head = reverseList(l, r);
+        while (r != nullptr) {
+            int i;
+            for (i = 0; i < k; i++) {
+                if (r == nullptr) {
+                    break;
+                }
+                prev = !prev ? head : prev->next;
+                r    = r->next;
+            }
+            l = l->next;
+            if (i < k && r == nullptr) {
+                break;
+            }
+            prev->next = reverseList(l, r);
         }
-        return toLinkedList(nodes);
+
+        return head;
     }
 
   private:
-    ListNode *toLinkedList(const std::vector<int> &arr) {
-        ListNode *root = nullptr, *ptr = nullptr;
+    ListNode *reverseList(ListNode *l, ListNode *r) {
+        ListNode *next = nullptr, *prev = r;
 
-        for (int i : arr) {
-            auto *newNode = new ListNode(i);
-            if (root == nullptr) {
-                root = newNode;
-            } else {
-                if (ptr == nullptr) {
-                    ptr = root;
-                }
-                ptr->next = newNode;
-                ptr       = ptr->next;
-            }
+        while (l != r) {
+            next    = l->next;
+            l->next = prev;
+            prev    = l;
+            l       = next;
         }
-        return root;
+        return prev;
     }
 };
 
@@ -70,6 +76,7 @@ int main(int argc, char *argv[]) {
             {{{1, 2, 3, 4, 5}, 2}, {2, 1, 4, 3, 5}},
             {{{1, 2, 3, 4, 5}, 3}, {3, 2, 1, 4, 5}},
             {{{1, 2, 3, 4, 5}, 5}, {5, 4, 3, 2, 1}},
+            {{{1, 2, 3, 4}, 2}, {2, 1, 4, 3}},
         };
 
     Solution solution;
