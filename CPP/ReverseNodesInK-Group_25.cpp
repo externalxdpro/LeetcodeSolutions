@@ -46,19 +46,18 @@ class Solution {
 
   private:
     ListNode *toLinkedList(const std::vector<int> &arr) {
-        ListNode *root = nullptr;
+        ListNode *root = nullptr, *ptr = nullptr;
 
         for (int i : arr) {
-            auto     *newNode = new ListNode(i);
-            ListNode *ptr     = nullptr;
+            auto *newNode = new ListNode(i);
             if (root == nullptr) {
                 root = newNode;
             } else {
-                ptr = root;
-                while (ptr->next != nullptr) {
-                    ptr = ptr->next;
+                if (ptr == nullptr) {
+                    ptr = root;
                 }
                 ptr->next = newNode;
+                ptr       = ptr->next;
             }
         }
         return root;
@@ -69,6 +68,8 @@ int main(int argc, char *argv[]) {
     std::vector<std::pair<std::pair<std::vector<int>, int>, std::vector<int>>>
         tests = {
             {{{1, 2, 3, 4, 5}, 2}, {2, 1, 4, 3, 5}},
+            {{{1, 2, 3, 4, 5}, 3}, {3, 2, 1, 4, 5}},
+            {{{1, 2, 3, 4, 5}, 5}, {5, 4, 3, 2, 1}},
         };
 
     Solution solution;
