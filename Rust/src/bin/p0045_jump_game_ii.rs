@@ -25,29 +25,23 @@ pub struct Solution {}
 
 // submission codes start here
 
-use std::collections::HashMap;
-
 impl Solution {
-    pub fn jump(nums: Vec<i32>) -> i32 {
-        Self::recurse(&nums, 0, &mut HashMap::new())
-    }
-
-    fn recurse(nums: &Vec<i32>, i: usize, dp: &mut HashMap<usize, i32>) -> i32 {
-        if i == nums.len() - 1 {
+    pub fn jump(mut nums: Vec<i32>) -> i32 {
+        if nums.len() <= 1 {
             return 0;
-        } else if i >= nums.len() {
-            return i32::MAX;
-        } else if let Some(&x) = dp.get(&i) {
-            return x;
         }
 
-        let mut result = i32::MAX;
-        for j in ((i + 1)..=(nums[i] as usize + i)).rev() {
-            result = result.min(Self::recurse(nums, j, dp));
+        for i in 1..nums.len() {
+            nums[i] = nums[i - 1].max(nums[i] + i as i32);
         }
 
-        dp.insert(i, result.saturating_add(1));
-        dp[&i]
+        let (mut curr_i, mut jumps) = (0, 0);
+        while curr_i < nums.len() - 1 {
+            jumps += 1;
+            curr_i = nums[curr_i] as usize;
+        }
+
+        jumps
     }
 }
 
