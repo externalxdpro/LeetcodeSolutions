@@ -22,30 +22,18 @@ pub struct Solution {}
 
 // submission codes start here
 
-use std::collections::HashMap;
-
 impl Solution {
     pub fn can_jump(nums: Vec<i32>) -> bool {
-        Self::recurse(&nums, 0, &mut HashMap::new())
-    }
-
-    fn recurse(nums: &Vec<i32>, i: usize, dp: &mut HashMap<usize, bool>) -> bool {
-        if i == nums.len() - 1 {
-            return true;
-        } else if i >= nums.len() {
-            return false;
-        } else if let Some(&x) = dp.get(&i) {
-            return x;
-        }
-
-        for j in ((i + 1)..=(i + nums[i] as usize)).rev() {
-            if Self::recurse(nums, j, dp) {
-                dp.insert(i, true);
+        let mut farthest = 0;
+        for i in 0..nums.len() {
+            if i > farthest {
+                return false;
+            }
+            farthest = farthest.max(i + nums[i] as usize);
+            if farthest >= nums.len() - 1 {
                 return true;
             }
         }
-
-        dp.insert(i, false);
         false
     }
 }
