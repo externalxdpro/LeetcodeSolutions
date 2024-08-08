@@ -26,13 +26,13 @@ impl Solution {
     pub fn spiral_matrix_iii(rows: i32, cols: i32, r_start: i32, c_start: i32) -> Vec<Vec<i32>> {
         let mut result = vec![];
         let (mut i, mut j) = (r_start, c_start);
-        let (mut rd_count, mut lu_count) = (1, 2);
+        let mut count = 1;
         let mut dir = 'r';
 
         while result.len() < (rows * cols) as usize {
             match dir {
                 'r' => {
-                    for _ in 0..rd_count {
+                    for _ in 0..count {
                         if Self::in_bounds(rows, cols, i, j) {
                             result.push(vec![i, j]);
                         }
@@ -41,17 +41,17 @@ impl Solution {
                     dir = 'd';
                 }
                 'd' => {
-                    for _ in 0..rd_count {
+                    for _ in 0..count {
                         if Self::in_bounds(rows, cols, i, j) {
                             result.push(vec![i, j]);
                         }
                         i += 1;
                     }
-                    rd_count += 2;
+                    count += 1;
                     dir = 'l';
                 }
                 'l' => {
-                    for _ in 0..lu_count {
+                    for _ in 0..count {
                         if Self::in_bounds(rows, cols, i, j) {
                             result.push(vec![i, j]);
                         }
@@ -60,13 +60,13 @@ impl Solution {
                     dir = 'u';
                 }
                 'u' => {
-                    for _ in 0..lu_count {
+                    for _ in 0..count {
                         if Self::in_bounds(rows, cols, i, j) {
                             result.push(vec![i, j]);
                         }
                         i -= 1;
                     }
-                    lu_count += 2;
+                    count += 1;
                     dir = 'r';
                 }
                 _ => (),
