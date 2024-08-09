@@ -33,39 +33,32 @@ pub struct Solution {}
 
 impl Solution {
     pub fn get_permutation(n: i32, k: i32) -> String {
-        let mut nums: Vec<char> = ('1'..=(char::from_digit(n as u32, 10).unwrap())).collect();
+        let factorials: [usize; 10] = [1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880];
+        let (n, k) = (n as usize, k as usize);
 
-        for _ in 1..k {
-            Self::next_permutation(&mut nums);
-        }
-
-        nums.into_iter().collect()
-    }
-
-    fn next_permutation(nums: &mut [char]) {
-        let len = nums.len();
-        let mut i = (len - 2) as i32;
-        while i >= 0 {
-            if nums[i as usize] < nums[i as usize + 1] {
-                break;
+        fn recurse(n: usize, k: usize, factorials: &[usize]) -> Vec<usize> {
+            let mut nums = (1..=n).collect();
+            if n == 1 || k == 0 {
+                return nums;
             }
-            i -= 1;
-        }
-        if i < 0 {
-            nums.reverse();
-            return;
-        }
-
-        let mut j = (len - 1) as i32;
-        while j > i {
-            if nums[j as usize] > nums[i as usize] {
-                break;
+            let fac_n_1 = factorials[n - 1];
+            let (si, pi) = (k / fac_n_1, k % fac_n_1);
+            for i in (1..=si).rev() {
+                nums.swap(i, i - 1);
             }
-            j -= 1;
-        }
-        nums.swap(i as usize, j as usize);
+            let sub_arr = recurse(n - 1, pi, factorials);
+            let clone = nums.clone();
+            for i in 1..nums.len() {
+                nums[i] = clone[sub_arr[i - 1]]
+            }
 
-        nums[(i as usize + 1)..].reverse();
+            nums
+        }
+
+        recurse(n, k - 1, &factorials)
+            .into_iter()
+            .map(|x| char::from_digit(x as u32, 10).unwrap())
+            .collect()
     }
 }
 
