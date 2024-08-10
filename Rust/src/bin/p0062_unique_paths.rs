@@ -55,5 +55,4 @@ impl Solution {
 fn main() {
     assert_eq!(Solution::unique_paths(3, 7), 28);
     assert_eq!(Solution::unique_paths(3, 2), 3);
-    assert_eq!(Solution::unique_paths(100, 100), 3);
 }
