@@ -33,36 +33,31 @@
 //     It is guaranteed that there will be at least k elements in the array when
 //     you search for the kth element.
 
-#include <algorithm>
 #include <fmt/ranges.h>
-#include <map>
+#include <queue>
 #include <vector>
 
 class KthLargest {
-    int                k;
-    std::map<int, int> nums;
+    int                                                           k;
+    std::priority_queue<int, std::vector<int>, std::greater<int>> nums;
 
   public:
     KthLargest(int k, std::vector<int> &nums) {
         this->k = k;
         for (int i : nums) {
-            this->nums[i]++;
+            this->nums.push(i);
+            if (this->nums.size() > this->k) {
+                this->nums.pop();
+            }
         }
     }
 
     int add(int val) {
-        this->nums[val]++;
-        int i = 0;
-        for (auto it = this->nums.rbegin(); it != this->nums.rend(); it++) {
-            auto [key, val] = *it;
-            for (int j = 0; j < val; j++) {
-                i++;
-                if (i == this->k) {
-                    return key;
-                }
-            }
+        this->nums.push(val);
+        if (this->nums.size() > this->k) {
+            this->nums.pop();
         }
-        return -1;
+        return this->nums.top();
     }
 };
 
