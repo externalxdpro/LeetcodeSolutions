@@ -35,40 +35,27 @@ pub struct Solution {}
 
 impl Solution {
     pub fn min_distance(word1: String, word2: String) -> i32 {
-        let mut dp = [[-1; 1000]; 1000];
-        let (str1, str2): (Vec<char>, Vec<char>) =
+        let (word1, word2): (Vec<char>, Vec<char>) =
             (word1.chars().collect(), word2.chars().collect());
-        return Self::recurse(
-            &str1,
-            &str2,
-            str1.len().wrapping_sub(1),
-            str2.len().wrapping_sub(1),
-            &mut dp,
-        );
-    }
-
-    fn recurse(str1: &[char], str2: &[char], i1: usize, i2: usize, dp: &mut [[i32; 1000]]) -> i32 {
-        if i1 == usize::MAX {
-            return i2 as i32 + 1;
-        } else if i2 == usize::MAX {
-            return i1 as i32 + 1;
+        let (len1, len2) = (word1.len(), word2.len());
+        let mut dp: Vec<Vec<i32>> = vec![vec![-1; len2 + 1]; len1 + 1];
+        for i in 0..=len1 {
+            dp[i][0] = i as i32;
+        }
+        for j in 0..=len2 {
+            dp[0][j] = j as i32;
+        }
+        for i in 1..=len1 {
+            for j in 1..=len2 {
+                if word1[i - 1] == word2[j - 1] {
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else {
+                    dp[i][j] = 1 + dp[i - 1][j].min(dp[i][j - 1]).min(dp[i - 1][j - 1])
+                }
+            }
         }
 
-        if dp[i1][i2] != -1 {
-            return dp[i1][i2];
-        }
-
-        if str1[i1] == str2[i2] {
-            dp[i1][i2] = Self::recurse(str1, str2, i1.wrapping_sub(1), i2.wrapping_sub(1), dp);
-            return dp[i1][i2];
-        } else {
-            let insert = Self::recurse(str1, str2, i1, i2.wrapping_sub(1), dp);
-            let rem = Self::recurse(str1, str2, i1.wrapping_sub(1), i2, dp);
-            let repl = Self::recurse(str1, str2, i1.wrapping_sub(1), i2.wrapping_sub(1), dp);
-            let max = insert.min(rem);
-            dp[i1][i2] = 1 + max.min(repl);
-            return dp[i1][i2];
-        }
+        dp[len1][len2]
     }
 }
 
