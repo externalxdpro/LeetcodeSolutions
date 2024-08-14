@@ -26,24 +26,21 @@ pub struct Solution {}
 
 impl Solution {
     pub fn sort_colors(nums: &mut Vec<i32>) {
-        let mut count = [0, 0, 0];
-        for &i in nums.iter() {
-            count[i as usize] += 1;
-        }
-        for i in 0..nums.len() {
-            match count {
-                [0, 0, _] => {
-                    nums[i] = 2;
-                    count[2] -= 1;
+        let (mut l, mut r, mut i) = (0, nums.len() - 1, 0);
+        while i <= r && r > 0 {
+            match nums[i] {
+                0 => {
+                    nums.swap(l, i);
+                    (l, i) = (l + 1, i + 1);
                 }
-                [0, _, _] => {
-                    nums[i] = 1;
-                    count[1] -= 1;
+                1 => {
+                    i += 1;
                 }
-                _ => {
-                    nums[i] = 0;
-                    count[0] -= 1;
+                2 => {
+                    nums.swap(i, r);
+                    r -= 1;
                 }
+                _ => (),
             }
         }
     }
