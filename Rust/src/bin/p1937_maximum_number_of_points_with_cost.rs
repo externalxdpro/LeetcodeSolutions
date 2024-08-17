@@ -40,45 +40,27 @@ pub struct Solution {}
 
 impl Solution {
     pub fn max_points(points: Vec<Vec<i32>>) -> i64 {
-        Self::recurse(
-            &points,
-            None,
-            &mut vec![vec![-1; points[0].len()]; points.len()],
-        )
-    }
+        let mut points: Vec<Vec<i64>> = points
+            .into_iter()
+            .map(|x| x.into_iter().map(|x| x as i64).collect())
+            .collect();
 
-    fn recurse(
-        points: &Vec<Vec<i32>>,
-        curr: Option<(usize, usize)>,
-        dp: &mut Vec<Vec<i64>>,
-    ) -> i64 {
-        match curr {
-            None => {
-                let mut max = 0;
-                for j in 0..points[0].len() {
-                    max = max.max(Self::recurse(points, Some((points.len() - 1, j)), dp));
-                }
-                max
+        for i in 1..points.len() {
+            let mut r = vec![0; points[0].len()];
+            *r.last_mut().unwrap() = *points[i - 1].last().unwrap();
+            for j in (0..(points[0].len() - 1)).rev() {
+                r[j] = points[i - 1][j].max(r[j + 1] - 1);
             }
-            Some(curr) => {
-                if dp[curr.0][curr.1] != -1 {
-                    return dp[curr.0][curr.1];
-                }
 
-                if curr.0 == 0 {
-                    return points[curr.0][curr.1].into();
-                }
-                let mut max = 0;
-                for j in 0..points[0].len() {
-                    max = max.max(
-                        Self::recurse(points, Some((curr.0 - 1, j)), dp)
-                            - j.abs_diff(curr.1) as i64,
-                    );
-                }
-                dp[curr.0][curr.1] = max + points[curr.0][curr.1] as i64;
-                dp[curr.0][curr.1]
+            let mut l = points[i - 1][0];
+            points[i][0] = l.max(r[0]) + points[i][0];
+            for j in 1..points[0].len() {
+                l = points[i - 1][j].max(l - 1);
+                points[i][j] = l.max(r[j]) + points[i][j];
             }
         }
+
+        *points.last().unwrap().into_iter().max().unwrap() as i64
     }
 }
 
