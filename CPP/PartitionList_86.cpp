@@ -27,36 +27,41 @@
 class Solution {
   public:
     ListNode *partition(ListNode *head, int x) {
-        std::vector<int> l, h;
-        while (head != nullptr) {
-            if (head->val < x) {
-                l.push_back(head->val);
-            } else {
-                h.push_back(head->val);
-            }
-            head = head->next;
+        if (head == nullptr) {
+            return nullptr;
         }
-        l.insert(l.end(), h.begin(), h.end());
-        return toLinkedList(l);
-    }
-
-  private:
-    ListNode *toLinkedList(const std::vector<int> &arr) {
-        ListNode *root = nullptr, *ptr = nullptr;
-
-        for (int i : arr) {
-            auto *newNode = new ListNode(i);
-            if (root == nullptr) {
-                root = newNode;
-            } else {
-                if (ptr == nullptr) {
-                    ptr = root;
+        ListNode *lhead = nullptr, *hhead = nullptr;
+        ListNode *l = nullptr, *h = nullptr;
+        ListNode *curr = head;
+        while (curr != nullptr) {
+            if (curr->val < x) {
+                if (lhead == nullptr) {
+                    lhead = curr;
+                    l     = curr;
+                } else {
+                    l->next = curr;
+                    l       = l->next;
                 }
-                ptr->next = newNode;
-                ptr       = ptr->next;
+                curr    = curr->next;
+                l->next = nullptr;
+            } else {
+                if (hhead == nullptr) {
+                    hhead = curr;
+                    h     = curr;
+                } else {
+                    h->next = curr;
+                    h       = h->next;
+                }
+                curr    = curr->next;
+                h->next = nullptr;
             }
         }
-        return root;
+        if (lhead == nullptr) {
+            return hhead;
+        } else {
+            l->next = hhead;
+            return lhead;
+        }
     }
 };
 
@@ -65,6 +70,8 @@ int main(int argc, char *argv[]) {
         tests = {
             {{{1, 4, 3, 2, 5, 2}, 3}, {1, 2, 2, 4, 3, 5}},
             {{{2, 1}, 2}, {1, 2}},
+            {{{}, 0}, {}},
+            {{{1}, 0}, {1}},
         };
 
     Solution solution;
