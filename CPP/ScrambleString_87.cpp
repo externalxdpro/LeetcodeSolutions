@@ -9,29 +9,45 @@
 class Solution {
   public:
     bool isScramble(std::string s1, std::string s2) {
-        int         n = s1.size();
-        std::vector dp(n + 1, std::vector(n, std::vector(n, 0)));
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                dp[1][i][j] = s1[i] == s2[j];
+        std::vector dp(40, std::vector(40, std::vector(40, -1)));
+        return recurse(s1, s2, {0, 0}, s1.size(), dp);
+    }
+
+    bool recurse(std::string &s1, std::string &s2, std::pair<int, int> l,
+                 int len, std::vector<std::vector<std::vector<int>>> &dp) {
+        if (len == 0) {
+            return (dp[l.first][l.second][len] = true);
+        }
+        if (dp[l.first][l.second][len] != -1) {
+            return dp[l.first][l.second][len];
+        }
+        for (int i = l.first, j = l.second; i <= len + l.first; i++, j++) {
+            if (i == l.first + len) {
+                return (dp[l.first][l.second][len] = true);
+            }
+            if (s1[i] != s2[j]) {
+                break;
             }
         }
-
-        for (int len = 2; len <= n; len++) {
-            for (int i = 0; i < n - len + 1; i++) {
-                for (int j = 0; j < n - len + 1; j++) {
-                    for (int newLen = 1; newLen < len; newLen++) {
-                        const std::vector<int> dp1 = dp[newLen][i];
-                        const std::vector<int> dp2 =
-                            dp[len - newLen][i + newLen];
-                        dp[len][i][j] |= dp1[j] && dp2[j + newLen];
-                        dp[len][i][j] |= dp1[j + len - newLen] && dp2[j];
-                    }
-                }
+        std::vector<int> count(26);
+        for (int i = l.first, j = l.second; i < len + l.first; i++, j++) {
+            count[s1[i] - 'a']++;
+            count[s2[j] - 'a']--;
+        }
+        for (int x : count) {
+            if (x) {
+                return (dp[l.first][l.second][len] = false);
             }
         }
-
-        return dp[n][0][0];
+        for (int i = 1; i < len; i++) {
+            if ((recurse(s1, s2, l, i, dp) &&
+                 recurse(s1, s2, {l.first + i, l.second + i}, len - i, dp)) ||
+                (recurse(s1, s2, {l.first + i, l.second}, len - i, dp) &&
+                 recurse(s1, s2, {l.first, l.second + len - i}, i, dp))) {
+                return (dp[l.first][l.second][len] = true);
+            }
+        }
+        return (dp[l.first][l.second][len] = false);
     }
 };
 
