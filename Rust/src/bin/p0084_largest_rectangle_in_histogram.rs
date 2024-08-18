@@ -23,22 +23,24 @@ pub struct Solution {}
 
 impl Solution {
     pub fn largest_rectangle_area(heights: Vec<i32>) -> i32 {
+        if heights.len() == 0 {
+            return 0;
+        } else if heights.len() == 1 {
+            return heights[0];
+        }
+
+        let mut result = heights[0];
         let mut stack = vec![];
-        let mut result = 0;
-        for i in 0..=heights.len() {
-            while !stack.is_empty()
-                && (i == heights.len() || heights[*stack.last().unwrap()] >= heights[i])
-            {
-                let height = heights[*stack.last().unwrap()];
-                stack.pop();
-                let width = if stack.is_empty() {
-                    i
-                } else {
-                    i - *stack.last().unwrap() - 1
-                };
-                result = result.max(width as i32 * height);
+        for i in 0..heights.len() {
+            while stack.last().is_some_and(|&j| heights[j] > heights[i]) {
+                let j = stack.pop().unwrap();
+                result = result.max(heights[j] * (i - stack.last().map_or(0, |&k| k + 1)) as i32);
             }
             stack.push(i);
+        }
+        while let Some(i) = stack.pop() {
+            result = result
+                .max(heights[i] * (heights.len() - stack.last().map_or(0, |&j| j + 1)) as i32);
         }
         result
     }
