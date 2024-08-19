@@ -44,29 +44,38 @@
 //     1 <= s.length <= 100
 //     s contains only digits and may contain leading zero(s).
 
-#include <algorithm>
 #include <fmt/ranges.h>
 #include <vector>
 
 class Solution {
   public:
     int numDecodings(std::string s) {
-        if (s.empty()) {
+        std::vector<int> dp(s.size() + 1, -1);
+        return recurse(s, 0, dp);
+    }
+
+    int recurse(std::string &s, int i, std::vector<int> &dp) {
+        if (i == s.size()) {
             return 1;
         }
-        if (s[0] == '0') {
-            return 0;
+        if (dp[i] != -1) {
+            return dp[i];
         }
-        return numDecodings(s.substr(1)) +
-               (s.size() >= 2 && (std::stoi(s.substr(0, 2)) <= 26)
-                    ? numDecodings(s.substr(2))
-                    : 0);
+        if (s[i] == '0') {
+            return dp[i] = 0;
+        }
+        return dp[i] = recurse(s, i + 1, dp) +
+                       (i < s.size() - 1 && (std::stoi(s.substr(i, 2)) <= 26)
+                            ? recurse(s, i + 2, dp)
+                            : 0);
     }
 };
 
 int main(int argc, char *argv[]) {
     std::vector<std::pair<std::string, int>> tests = {
-        {"12", 2}, {"226", 3}, {"06", 0}, {"10", 1}, {"27", 1},
+        {"12", 2}, {"226", 3},
+        {"06", 0}, {"10", 1},
+        {"27", 1}, {"111111111111111111111111111111111111111111111", 100},
     };
 
     Solution solution;
