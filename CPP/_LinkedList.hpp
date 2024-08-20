@@ -10,19 +10,18 @@ struct ListNode {
 };
 
 inline ListNode *toLinkedList(const std::vector<int> &arr) {
-    ListNode *root = nullptr;
+    ListNode *root = nullptr, *ptr = nullptr;
 
     for (int i : arr) {
-        auto     *newNode = new ListNode(i);
-        ListNode *ptr     = nullptr;
+        auto *newNode = new ListNode(i);
         if (root == nullptr) {
             root = newNode;
         } else {
-            ptr = root;
-            while (ptr->next != nullptr) {
-                ptr = ptr->next;
+            if (ptr == nullptr) {
+                ptr = root;
             }
             ptr->next = newNode;
+            ptr       = ptr->next;
         }
     }
     return root;
