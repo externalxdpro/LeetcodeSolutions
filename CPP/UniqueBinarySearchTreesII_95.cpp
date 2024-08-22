@@ -27,18 +27,18 @@
 class Solution {
   public:
     std::vector<TreeNode *> generateTrees(int n) {
-        std::map<std::pair<int, int>, std::vector<TreeNode *>> dp;
+        std::vector dp(9, std::vector(9, std::vector<TreeNode *>()));
         return recurse(1, n, dp);
     }
 
     std::vector<TreeNode *>
     recurse(int l, int r,
-            std::map<std::pair<int, int>, std::vector<TreeNode *>> &dp) {
+            std::vector<std::vector<std::vector<TreeNode *>>> &dp) {
         if (l > r) {
             return {nullptr};
         }
-        if (!dp[{l, r}].empty()) {
-            return dp[{l, r}];
+        if (!dp[l][r].empty()) {
+            return dp[l][r];
         }
 
         std::vector<TreeNode *> result;
@@ -52,7 +52,7 @@ class Solution {
             }
         }
 
-        return dp[{l, r}] = result;
+        return dp[l][r] = result;
     }
 };
 
