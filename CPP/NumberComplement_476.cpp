@@ -25,17 +25,22 @@
 // Note: This question is the same as 1009:
 // https://leetcode.com/problems/complement-of-base-10-integer/
 
-#include <bitset>
-#include <cmath>
 #include <fmt/ranges.h>
 #include <vector>
 
 class Solution {
   public:
     int findComplement(int num) {
-        int len  = 31 - std::bitset<31>(num).to_string().find('1');
-        int temp = std::bitset<31>(std::string(len, '1')).to_ulong();
-        return num ^ temp;
+        if (num == 0) {
+            return 1;
+        }
+        int curr = num;
+        int mask = 0;
+        while (curr != 0) {
+            mask = (mask << 1) | 1;
+            curr >>= 1;
+        }
+        return num ^ mask;
     }
 };
 
