@@ -49,12 +49,16 @@ class Fraction {
         this->den = std::stoi(str.substr(slash + 1));
     }
 
-    Fraction operator+(Fraction &other) {
+    Fraction &operator+(const Fraction &other) {
         int lcm = (this->den * other.den) / std::gcd(this->den, other.den);
         int sum = (this->num * lcm / this->den) + (other.num * lcm / other.den);
-        int num = sum / std::gcd(sum, lcm);
-        lcm /= std::gcd(sum, lcm);
-        return {num, lcm};
+        return *this = {sum, lcm};
+    }
+    Fraction &operator+=(const Fraction &other) { return *this + other; }
+
+    Fraction &simplify() {
+        int gcd      = std::gcd(this->num, this->den);
+        return *this = {this->num / gcd, this->den / gcd};
     }
 
     std::string to_string() { return std::format("{}/{}", num, den); }
@@ -63,9 +67,9 @@ class Fraction {
 class Solution {
   public:
     std::string fractionAddition(std::string expression) {
-        std::vector<Fraction> fracs;
-        int                   i = 0;
-        while (i < (int)expression.size()) {
+        Fraction result;
+        int      i = 0;
+        while (i < expression.size()) {
             int j =
                 (int)std::min(expression.find('-', i), expression.find('+', i));
             if (j == i) {
@@ -79,13 +83,12 @@ class Solution {
             } else {
                 substr = expression.substr(i, j - i);
             }
-            fracs.emplace_back(substr);
+            result = result + Fraction(substr);
 
             i = (j == std::string::npos) ? INT_MAX : j;
         }
 
-        return std::accumulate(fracs.begin(), fracs.end(), Fraction())
-            .to_string();
+        return result.simplify().to_string();
     }
 };
 
