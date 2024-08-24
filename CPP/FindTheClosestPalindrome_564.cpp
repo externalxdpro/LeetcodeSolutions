@@ -27,7 +27,6 @@
 //     n does not have leading zeros.
 //     n is representing an integer in the range [1, 10^18 - 1].
 
-#include <algorithm>
 #include <fmt/ranges.h>
 #include <vector>
 
