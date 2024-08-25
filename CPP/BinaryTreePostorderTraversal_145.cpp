@@ -32,18 +32,29 @@ class Solution {
   public:
     std::vector<int> postorderTraversal(TreeNode *root) {
         std::vector<int> result;
-        recurse(root, result);
-        return result;
-    }
 
-  private:
-    void recurse(TreeNode *node, std::vector<int> &result) {
-        if (node == nullptr) {
-            return;
+        while (root) {
+            if (!root->right) {
+                result.push_back(root->val);
+                root = root->left;
+            } else {
+                TreeNode *next = root->right;
+                while (next->left != nullptr && next->left != root) {
+                    next = next->left;
+                }
+                if (next->left == nullptr) {
+                    result.push_back(root->val);
+                    next->left = root;
+                    root       = root->right;
+                } else {
+                    next->left = nullptr;
+                    root       = root->left;
+                }
+            }
         }
-        recurse(node->left, result);
-        recurse(node->right, result);
-        result.push_back(node->val);
+
+        std::reverse(result.begin(), result.end());
+        return result;
     }
 };
 
