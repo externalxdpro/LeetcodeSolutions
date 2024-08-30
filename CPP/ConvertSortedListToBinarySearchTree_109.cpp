@@ -21,29 +21,27 @@
 #include "_BinaryTree.hpp"
 #include "_LinkedList.hpp"
 
-#include <fmt/ranges.h>
-#include <vector>
-
 class Solution {
   public:
     TreeNode *sortedListToBST(ListNode *head) {
-        std::vector<int> nodes;
-        while (head != nullptr) {
-            nodes.push_back(head->val);
-            head = head->next;
-        }
-        return construct(nodes, 0, nodes.size() - 1);
+        return construct(head, nullptr);
     }
 
   private:
-    TreeNode *construct(std::vector<int> &nums, int l, int r) {
-        if (l > r) {
+    TreeNode *construct(ListNode *l, ListNode *r) {
+        if (l == r) {
             return nullptr;
         }
-        int       m    = l + (r - l) / 2;
-        TreeNode *root = new TreeNode(nums[m]);
-        root->left     = construct(nums, l, m - 1);
-        root->right    = construct(nums, m + 1, r);
+
+        ListNode *m = l, *temp = l;
+        while (temp != r && temp->next != r) {
+            m    = m->next;
+            temp = temp->next->next;
+        }
+
+        TreeNode *root = new TreeNode(m->val);
+        root->left     = construct(l, m);
+        root->right    = construct(m->next, r);
         return root;
     }
 };
