@@ -36,8 +36,6 @@
 //     There is at most one edge between every two nodes.
 
 #include <fmt/ranges.h>
-#include <queue>
-#include <unordered_map>
 #include <vector>
 
 class Solution {
@@ -45,33 +43,30 @@ class Solution {
     double maxProbability(int n, std::vector<std::vector<int>> &edges,
                           std::vector<double> &succProb, int start_node,
                           int end_node) {
-        std::unordered_map<int, std::vector<std::pair<int, double>>> graph;
-        for (int i = 0; i < edges.size(); i++) {
-            int u = edges[i][0], v = edges[i][1];
-            graph[u].emplace_back(v, succProb[i]);
-            graph[v].emplace_back(u, succProb[i]);
-        }
-
         std::vector<double> maxProb(n);
         maxProb[start_node] = 1;
 
-        std::priority_queue<std::pair<double, int>> pq;
-        pq.emplace(1, start_node);
-        while (!pq.empty()) {
-            auto [prob, node] = pq.top();
-            pq.pop();
-            if (node == end_node) {
-                return prob;
-            }
-            for (auto &[nxtNode, pathProb] : graph[node]) {
-                if (prob * pathProb > maxProb[nxtNode]) {
-                    maxProb[nxtNode] = prob * pathProb;
-                    pq.emplace(maxProb[nxtNode], nxtNode);
+        for (int i = 0; i < n - 1; i++) {
+            bool hasUpdate = false;
+            for (int j = 0; j < edges.size(); j++) {
+                int    u = edges[j][0], v = edges[j][1];
+                double prob = succProb[j];
+                if (maxProb[u] * prob > maxProb[v]) {
+                    maxProb[v] = maxProb[u] * prob;
+                    hasUpdate  = true;
                 }
+                if (maxProb[v] * prob > maxProb[u]) {
+                    maxProb[u] = maxProb[v] * prob;
+                    hasUpdate  = true;
+                }
+            }
+
+            if (!hasUpdate) {
+                break;
             }
         }
 
-        return 0;
+        return maxProb[end_node];
     }
 };
 
