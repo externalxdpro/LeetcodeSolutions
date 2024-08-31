@@ -26,22 +26,28 @@
 
 class Solution {
   public:
-    bool isBalanced(TreeNode *root) {
-        if (root == nullptr) {
-            return true;
-        }
-        if (std::abs(depth(root->left) - depth(root->right)) > 1) {
-            return false;
-        }
-        return isBalanced(root->left) && isBalanced(root->right);
-    }
+    bool isBalanced(TreeNode *root) { return helper(root) > -1; }
 
   private:
-    int depth(TreeNode *node) {
+    int helper(TreeNode *node) {
         if (node == nullptr) {
             return 0;
         }
-        return 1 + std::max(depth(node->left), depth(node->right));
+
+        int lSub = helper(node->left);
+        if (lSub == -1) {
+            return -1;
+        }
+        int rSub = helper(node->right);
+        if (rSub == -1) {
+            return -1;
+        }
+
+        if (std::abs(lSub - rSub) > 1) {
+            return -1;
+        }
+
+        return 1 + std::max(lSub, rSub);
     }
 };
 
