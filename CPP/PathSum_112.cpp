@@ -31,34 +31,22 @@
 
 #include "_BinaryTree.hpp"
 
-#include <algorithm>
-#include <vector>
-
 class Solution {
   public:
     bool hasPathSum(TreeNode *root, int targetSum) {
-        std::vector<int> result;
-        recurse(root, 0, result);
-        return std::find(result.begin(), result.end(), targetSum) !=
-               result.end();
+        return recurse(root, targetSum);
     }
 
   private:
-    void recurse(TreeNode *node, int sum, std::vector<int> &result) {
+    bool recurse(TreeNode *node, int target) {
         if (node == nullptr) {
-            return;
+            return false;
         }
-        sum += node->val;
+        target -= node->val;
         if (node->left == nullptr && node->right == nullptr) {
-            result.push_back(sum);
-            return;
+            return target == 0;
         }
-        if (node->left != nullptr) {
-            recurse(node->left, sum, result);
-        }
-        if (node->right != nullptr) {
-            recurse(node->right, sum, result);
-        }
+        return recurse(node->left, target) || recurse(node->right, target);
     }
 };
 
