@@ -46,7 +46,6 @@
 //     1 <= chalk[i] <= 10^5
 //     1 <= k <= 10^9
 
-#include <algorithm>
 #include <fmt/ranges.h>
 #include <numeric>
 #include <vector>
@@ -56,9 +55,7 @@ class Solution {
     int chalkReplacer(std::vector<int> &chalk, int k) {
         long long sum =
             std::accumulate(chalk.begin(), chalk.end(), (long long)0);
-        while (k - sum > 0) {
-            k -= sum;
-        }
+        k %= sum != 0 ? sum : 1;
         for (int i = 0; i < chalk.size(); i++) {
             k -= chalk[i];
             if (k < 0) {
