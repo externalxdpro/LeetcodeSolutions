@@ -27,7 +27,7 @@
 
 #include "_BinaryTree.hpp"
 
-#include <vector>
+#include <stack>
 
 class Solution {
   public:
@@ -35,25 +35,24 @@ class Solution {
         if (root == nullptr) {
             return;
         }
-        std::vector<TreeNode *> nodes;
-        preorder(root, nodes);
-        root           = nodes[0];
+        std::stack<TreeNode *> stack;
+        if (root->left != nullptr) {
+            if (root->right != nullptr) {
+                stack.push(root->right);
+            }
+            root->right = root->left;
+            root->left  = nullptr;
+        }
+        flatten(root->right);
         TreeNode *curr = root;
-        for (int i = 1; i < nodes.size(); i++) {
-            curr->left  = nullptr;
-            curr->right = nodes[i];
-            curr        = curr->right;
+        while (curr->right != nullptr) {
+            curr = curr->right;
         }
-    }
-
-  private:
-    void preorder(TreeNode *node, std::vector<TreeNode *> &nodes) {
-        if (node == nullptr) {
-            return;
+        while (!stack.empty()) {
+            curr->right = stack.top();
+            flatten(stack.top());
+            stack.pop();
         }
-        nodes.push_back(node);
-        preorder(node->left, nodes);
-        preorder(node->right, nodes);
     }
 };
 
