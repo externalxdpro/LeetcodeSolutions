@@ -48,19 +48,25 @@
 class Solution {
   public:
     int getLucky(std::string s, int k) {
-        std::string curr;
+        long long result = 0;
         for (char c : s) {
-            curr += std::to_string(c - 'a' + 1);
+            int temp = c - 'a' + 1;
+            result += temp % 10 + temp / 10;
         }
-        for (int i = 0; i < k; i++) {
-            int temp = 0;
-            for (char c : curr) {
-                temp += c - '0';
-            }
-            curr = std::to_string(temp);
+        for (int i = 1; i < k; i++) {
+            result = sum(result);
         }
+        return result;
+    }
 
-        return std::stoi(curr);
+  private:
+    long long sum(long long num) {
+        long long result = 0;
+        while (num) {
+            result += num % 10;
+            num /= 10;
+        }
+        return result;
     }
 };
 
