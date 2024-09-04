@@ -70,33 +70,31 @@ class Solution {
   public:
     int robotSim(std::vector<int>              &commands,
                  std::vector<std::vector<int>> &obstacles) {
-        std::set<std::pair<int, int>> obs;
+        std::set<std::array<int, 2>> obs;
         for (auto i : obstacles) {
-            obs.emplace(i[0], i[1]);
+            obs.insert({i[0], i[1]});
         }
 
-        const std::array<std::pair<int, int>, 4> dirs = {
+        const std::array<std::array<int, 2>, 4> dirs = {
             {{0, 1}, {1, 0}, {0, -1}, {-1, 0}}};
-        int       dirI = 0;
-        std::pair curr = {0, 0};
-        int       max  = 0;
+        int        dirI = 0;
+        std::array curr = {0, 0};
+        int        max  = 0;
         for (int cmd : commands) {
             if (cmd == -2) {
                 dirI = dirI == 0 ? 3 : dirI - 1;
             } else if (cmd == -1) {
                 dirI = dirI == 3 ? 0 : dirI + 1;
             } else {
-                std::pair<int, int> dir = dirs[dirI];
+                std::array dir = dirs[dirI];
                 for (int k = 0; k < cmd; k++) {
-                    std::pair<int, int> next = {curr.first + dir.first,
-                                                curr.second + dir.second};
+                    std::array next = {curr[0] + dir[0], curr[1] + dir[1]};
                     if (obs.contains(next)) {
                         break;
                     }
                     curr = next;
                 }
-                max = std::max(max, curr.first * curr.first +
-                                        curr.second * curr.second);
+                max = std::max(max, curr[0] * curr[0] + curr[1] * curr[1]);
             }
         }
 
