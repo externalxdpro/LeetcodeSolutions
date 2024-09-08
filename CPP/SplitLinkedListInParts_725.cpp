@@ -33,8 +33,6 @@
 
 #include "_LinkedList.hpp"
 
-#include <algorithm>
-#include <fmt/ranges.h>
 #include <vector>
 
 class Solution {
