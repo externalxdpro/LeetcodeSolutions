@@ -39,17 +39,18 @@ class Solution {
   public:
     std::vector<int> xorQueries(std::vector<int>              &arr,
                                 std::vector<std::vector<int>> &queries) {
+        for (int i = 1; i < arr.size(); i++) {
+            arr[i] ^= arr[i - 1];
+        }
         std::vector<int> result;
         result.reserve(queries.size());
-
-        for (std::vector<int> &q : queries) {
-            int currXor = 0;
-            for (int i = q[0]; i <= q[1]; i++) {
-                currXor ^= arr[i];
+        for (const std::vector<int> &q : queries) {
+            if (q[0] > 0) {
+                result.push_back(arr[q[0] - 1] ^ arr[q[1]]);
+            } else {
+                result.push_back(arr[q[1]]);
             }
-            result.push_back(currXor);
         }
-
         return result;
     }
 };
