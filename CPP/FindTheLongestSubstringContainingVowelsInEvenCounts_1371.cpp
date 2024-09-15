@@ -26,52 +26,32 @@
 //     1 <= s.length <= 5 x 10^5
 //     s contains only lowercase English letters.
 
+#include <cstring>
 #include <fmt/ranges.h>
-#include <unordered_map>
 #include <vector>
 
 class Solution {
   public:
     int findTheLongestSubstring(std::string s) {
-        std::vector<char> vowels = {'a', 'e', 'i', 'o', 'u'};
+        const int charMap[] = {1, 0, 0, 0, 2, 0, 0, 0,  4, 0, 0, 0, 0,
+                               0, 8, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0};
+        int       mp[32];
+        std::memset(mp, -1, sizeof(mp));
 
-        for (int window = s.size(); window > 0; window--) {
-            std::unordered_map<char, int> count;
-            for (int i = 0; i < window; i++) {
-                count[s[i]]++;
-            }
+        int prefixXOR = 0;
+        int result    = 0;
+        mp[0]         = 0;
 
-            if (isValid(vowels, count)) {
-                return window;
-            }
-
-            int start = 0, end = window - 1;
-
-            while (end < s.size() - 1) {
-                count[s[start]]--;
-                if (count[s[start]] < 0) {
-                    count[s[start]] = 0;
-                }
-                start++, end++;
-                count[s[end]]++;
-                if (isValid(vowels, count)) {
-                    return window;
-                }
+        for (int i = 0; i < s.size(); i++) {
+            prefixXOR ^= charMap[s[i] - 'a'];
+            if (mp[prefixXOR] == -1) {
+                mp[prefixXOR] = i + 1;
+            } else {
+                result = std::max(result, i - mp[prefixXOR] + 1);
             }
         }
 
-        return 0;
-    }
-
-  private:
-    bool isValid(std::vector<char>             &vowels,
-                 std::unordered_map<char, int> &count) {
-        for (char v : vowels) {
-            if (count[v] % 2 != 0) {
-                return false;
-            }
-        }
-        return true;
+        return result;
     }
 };
 
