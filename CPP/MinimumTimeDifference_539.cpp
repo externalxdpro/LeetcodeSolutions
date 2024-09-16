@@ -27,9 +27,8 @@ class Solution {
         std::vector<int> mins;
         mins.reserve(timePoints.size() * 2);
         for (std::string &time : timePoints) {
-            auto sep = std::find(time.begin(), time.end(), ':');
-            int  h   = std::stoi(std::string(time.begin(), sep));
-            int  m   = std::stoi(std::string(sep + 1, time.end()));
+            int h = (time[0] - '0') * 10 + (time[1] - '0');
+            int m = (time[3] - '0') * 10 + (time[4] - '0');
             mins.push_back(h * 60 + m);
             mins.push_back((h + 24) * 60 + m);
         }
