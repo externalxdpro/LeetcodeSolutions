@@ -31,25 +31,29 @@
 //     The integer values in the input expression do not have a leading '-' or
 //     '+' denoting the sign.
 
-#include <algorithm>
 #include <fmt/ranges.h>
 #include <vector>
 
 class Solution {
   public:
     std::vector<int> diffWaysToCompute(std::string expression) {
-        return recurse(expression, 0, expression.size() - 1);
+        std::vector<int> memo[21][21];
+        return recurse(expression, 0, expression.size() - 1, memo);
     }
 
   private:
     bool isNum(char c) { return c >= '0' && c <= '9'; }
 
-    std::vector<int> recurse(std::string &exp, int i, int j) {
+    std::vector<int> recurse(std::string &exp, int i, int j,
+                             std::vector<int> memo[21][21]) {
         if (i == j) {
             return {exp[i] - '0'};
         }
         if (j - i == 1 && isNum(exp[i]) && isNum(exp[j])) {
             return {(exp[i] - '0') * 10 + exp[j] - '0'};
+        }
+        if (memo[i][j].size()) {
+            return memo[i][j];
         }
 
         std::vector<int> result;
@@ -57,8 +61,8 @@ class Solution {
             if (isNum(exp[k])) {
                 continue;
             }
-            std::vector<int> l = recurse(exp, i, k - 1),
-                             r = recurse(exp, k + 1, j);
+            std::vector<int> l = recurse(exp, i, k - 1, memo),
+                             r = recurse(exp, k + 1, j, memo);
 
             for (int x : l) {
                 for (int y : r) {
@@ -73,7 +77,7 @@ class Solution {
             }
         }
 
-        return result;
+        return memo[i][j] = result;
     }
 };
 
