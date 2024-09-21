@@ -16,22 +16,33 @@
 // Constraints:
 //     1 <= n <= 5 * 10^4
 
-#include <algorithm>
 #include <fmt/ranges.h>
 #include <vector>
 
 class Solution {
   public:
     std::vector<int> lexicalOrder(int n) {
-        std::vector<std::string> strs(n);
-        std::vector<int>         result(n);
-        for (int i = 1; i <= n; i++) {
-            strs[i - 1] = std::to_string(i);
+        std::vector<int> result;
+        result.reserve(n);
+        for (int i = 1; i <= 9; i++) {
+            recurse(i, n, result);
         }
-        std::ranges::sort(strs);
-        std::ranges::transform(strs, result.begin(),
-                               [](std::string i) { return std::stoi(i); });
         return result;
+    }
+
+  private:
+    void recurse(int curr, int lim, std::vector<int> &result) {
+        if (curr > lim) {
+            return;
+        }
+        result.push_back(curr);
+        for (int i = 0; i <= 9; i++) {
+            int num = curr * 10 + i;
+            if (num > lim) {
+                break;
+            }
+            recurse(num, lim, result);
+        }
     }
 };
 
