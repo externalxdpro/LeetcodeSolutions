@@ -32,7 +32,6 @@
 
 #include <fmt/ranges.h>
 #include <functional>
-#include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
@@ -41,13 +40,14 @@ class Solution {
     int minExtraChar(std::string s, std::vector<std::string> &dictionary) {
         std::unordered_set<std::string> dict(dictionary.begin(),
                                              dictionary.end());
-        std::unordered_map<int, int>    memo;
+        int                             memo[51];
+        std::memset(memo, -1, sizeof(memo));
 
         std::function<int(int)> dp = [&](int i) -> int {
             if (i == s.size()) {
                 return 0;
             }
-            if (memo.contains(i)) {
+            if (memo[i] != -1) {
                 return memo[i];
             }
             int res = dp(i + 1) + 1;
