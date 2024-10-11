@@ -61,23 +61,42 @@
 
 class Solution {
   public:
-    int smallestChair(std::vector<std::vector<int>> &times, int targetFriend) {
-        std::vector<int> target = times[targetFriend];
-        std::sort(times.begin(), times.end());
-        std::vector<int> chairTime(times.size());
+    int smallestChair(std::vector<std::vector<int>> &times, int target) {
+        std::vector<std::pair<int, int>> events;
 
-        for (const auto &time : times) {
-            for (int i = 0; i < times.size(); i++) {
-                if (chairTime[i] <= time[0]) {
-                    chairTime[i] = time[1];
-                    if (time == target) {
-                        return i;
-                    }
-                    break;
+        for (int i = 0; i < times.size(); i++) {
+            events.emplace_back(times[i][0], i);
+            events.emplace_back(times[i][1], ~i);
+        }
+
+        std::sort(events.begin(), events.end());
+
+        std::priority_queue<int, std::vector<int>, std::greater<int>> available;
+        std::priority_queue<std::pair<int, int>,
+                            std::vector<std::pair<int, int>>,
+                            std::greater<std::pair<int, int>>>
+            occupied;
+
+        for (int i = 0; i < times.size(); i++) {
+            available.push(i);
+        }
+
+        for (const auto &[time, i] : events) {
+            while (!occupied.empty() && occupied.top().first <= time) {
+                available.push(occupied.top().second);
+                occupied.pop();
+            }
+            if (i >= 0) {
+                int curr = available.top();
+                available.pop();
+                if (i == target) {
+                    return curr;
                 }
+                occupied.emplace(times[i][1], curr);
             }
         }
-        return 0;
+
+        return -1;
     }
 };
 
