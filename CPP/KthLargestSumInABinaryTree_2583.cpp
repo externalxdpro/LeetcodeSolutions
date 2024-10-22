@@ -67,8 +67,9 @@ class Solution {
         if (sums.size() < k) {
             return -1;
         }
-        std::ranges::sort(sums, [](auto a, auto b) { return a > b; });
-        return sums[k - 1];
+        std::nth_element(sums.begin(), sums.begin() + k - 1, sums.end(),
+                         std::greater<>());
+        return *(sums.begin() + k - 1);
     }
 };
 
