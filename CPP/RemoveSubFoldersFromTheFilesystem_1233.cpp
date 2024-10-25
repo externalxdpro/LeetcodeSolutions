@@ -57,11 +57,8 @@ class Solution {
         int i;
         for (i = 0; i < folder.size(); i++) {
             result.push_back(folder[i]);
-            std::string back = folder[i] + '/';
             for (i = i + 1; i < folder.size(); i++) {
-                std::string curr =
-                    folder[i].substr(0, result.back().size() + 1);
-                if (curr != back) {
+                if (!folder[i].starts_with(result.back() + '/')) {
                     i--;
                     break;
                 }
