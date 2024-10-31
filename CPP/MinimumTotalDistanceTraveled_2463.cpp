@@ -71,45 +71,28 @@
 
 #include <algorithm>
 #include <fmt/ranges.h>
-#include <functional>
 #include <vector>
 
 class Solution {
   public:
     long long minimumTotalDistance(std::vector<int>              &robot,
                                    std::vector<std::vector<int>> &factory) {
+        std::vector<long long> memo(robot.size() + 1, 1e12);
+        memo[0] = 0;
         std::ranges::sort(robot);
         std::ranges::sort(factory);
-
-        std::vector<int> pos;
-        for (const auto &f : factory) {
-            for (int i = 0; i < f[1]; i++) {
-                pos.push_back(f[0]);
+        for (int i = 0; i < factory.size(); i++) {
+            int pos = factory[i][0];
+            int lim = factory[i][1];
+            while (lim--) {
+                for (int j = robot.size() - 1; j >= 0; j--) {
+                    memo[j + 1] = std::min(memo[j + 1],
+                                           std::abs(robot[j] - pos) + memo[j]);
+                }
             }
         }
 
-        std::vector<std::vector<long long>> memo(robot.size(),
-                                                 std::vector(pos.size(), -1ll));
-
-        std::function<long long(int, int)> recurse =
-            [&](int robotI, int posI) -> long long {
-            if (robotI == robot.size()) {
-                return 0;
-            }
-            if (posI == pos.size()) {
-                return 1e12;
-            }
-            if (memo[robotI][posI] != -1) {
-                return memo[robotI][posI];
-            }
-
-            long long take = std::abs(robot[robotI] - pos[posI]) +
-                             recurse(robotI + 1, posI + 1);
-            long long skip            = recurse(robotI, posI + 1);
-            return memo[robotI][posI] = std::min(take, skip);
-        };
-
-        return recurse(0, 0);
+        return memo.back();
     }
 };
 
