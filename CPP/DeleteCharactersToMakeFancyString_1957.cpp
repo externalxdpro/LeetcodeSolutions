@@ -43,19 +43,18 @@
 
 class Solution {
   public:
-    std::string makeFancyString(const std::string &s) {
-        std::string result;
-        result.reserve(s.size());
-
-        for (char c : s) {
-            if (result.size() >= 2 && c == result.back() &&
-                c == *(result.rbegin() + 1)) {
-                continue;
-            }
-            result.push_back(c);
+    std::string makeFancyString(std::string s) {
+        if (s.size() <= 2) {
+            return s;
         }
-
-        return result;
+        int j = 2;
+        for (int i = 2; i < s.size(); i++) {
+            if (s[i] != s[j - 1] || s[i] != s[j - 2]) {
+                s[j++] = s[i];
+            }
+        }
+        s.resize(j);
+        return s;
     }
 };
 
@@ -64,6 +63,7 @@ int main(int argc, char *argv[]) {
         {"leeetcode", "leetcode"},
         {"aaabaaaa", "aabaa"},
         {"aab", "aab"},
+        {"a", "a"},
     };
 
     Solution solution;
