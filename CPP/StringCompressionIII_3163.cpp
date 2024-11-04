@@ -44,31 +44,35 @@
 //     1 <= word.length <= 2 * 105
 //     word consists only of lowercase English letters.
 
-#include <algorithm>
 #include <fmt/ranges.h>
-#include <format>
 #include <vector>
 
 class Solution {
   public:
     std::string compressedString(std::string word) {
         std::string comp;
-
-        int i = 0;
-        while (i < word.size()) {
-            int count = 1;
-            while (i < word.size()) {
-                i++;
-                if (count == 9) {
-                    break;
+        char        last  = word[0];
+        int         count = 1;
+        for (int i = 1; i < word.size(); i++) {
+            if (last == word[i]) {
+                if (count < 9) {
+                    count++;
+                    continue;
+                } else {
+                    comp.push_back(count + '0');
+                    comp.push_back(last);
+                    count = 1;
                 }
-                if (word[i] != word[i - 1]) {
-                    break;
-                }
-                count++;
+            } else {
+                comp.push_back(count + '0');
+                comp.push_back(last);
+                count = 1;
+                last  = word[i];
             }
-            comp += std::format("{}{}", count, word[i - 1]);
         }
+        comp.push_back(count + '0');
+        comp.push_back(last);
+
         return comp;
     }
 };
