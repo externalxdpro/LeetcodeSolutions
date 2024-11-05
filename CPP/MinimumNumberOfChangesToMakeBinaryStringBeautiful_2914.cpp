@@ -50,23 +50,12 @@
 class Solution {
   public:
     int minChanges(std::string s) {
-        char curr  = s[0];
-        int  count = 0, result = 0;
+        int result = 0;
 
-        for (int i = 0; i < s.size(); i++) {
-            if (s[i] == curr) {
-                count++;
-                continue;
-            }
-
-            if (count % 2 == 0) {
-                count = 1;
-            } else {
-                count = 0;
+        for (int i = 0; i < s.size(); i += 2) {
+            if (s[i] != s[i + 1]) {
                 result++;
             }
-
-            curr = s[i];
         }
 
         return result;
