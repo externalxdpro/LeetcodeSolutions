@@ -49,18 +49,13 @@
 class Solution {
   public:
     std::vector<int> getMaximumXor(std::vector<int> &nums, int maximumBit) {
+        int              mask = (1 << maximumBit) - 1;
         std::vector<int> result(nums.size());
-
-        int curr = 0;
+        int              curr = 0;
         for (int i = 0; i < nums.size(); i++) {
             curr ^= nums[i];
+            result[nums.size() - i - 1] = ~curr & mask;
         }
-
-        for (int i = 0; i < nums.size(); i++) {
-            result[i] = curr ^ ((1 << maximumBit) - 1);
-            curr ^= nums[nums.size() - i - 1];
-        }
-
         return result;
     }
 };
