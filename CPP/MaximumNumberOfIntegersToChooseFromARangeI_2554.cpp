@@ -50,16 +50,13 @@ class Solution {
   public:
     int maxCount(const std::vector<int> &banned, int n, int maxSum) {
         std::unordered_set<int> bSet(banned.begin(), banned.end());
-        std::vector<int>        nums;
-        for (int i = 1; i <= n; i++) {
-            if (!bSet.contains(i)) {
-                nums.push_back(i);
-            }
-        }
 
-        int sum = 0, count = 0;
-        for (int i = 0; i < nums.size() && sum + nums[i] <= maxSum; i++) {
-            sum += nums[i];
+        int count = 0;
+        for (int i = 1; i <= n && i <= maxSum; i++) {
+            if (bSet.contains(i)) {
+                continue;
+            }
+            maxSum -= i;
             count++;
         }
         return count;
