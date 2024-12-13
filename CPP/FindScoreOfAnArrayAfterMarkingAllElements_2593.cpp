@@ -44,31 +44,26 @@
 
 #include <algorithm>
 #include <fmt/ranges.h>
-#include <queue>
 #include <unordered_set>
 #include <vector>
 
 class Solution {
   public:
     long long findScore(const std::vector<int> &nums) {
-        std::priority_queue<std::pair<int, int>,
-                            std::vector<std::pair<int, int>>, std::greater<>>
-            pq;
+        std::vector<std::pair<int, int>> pairs(nums.size());
         for (int i = 0; i < nums.size(); i++) {
-            pq.emplace(nums[i], i);
+            pairs[i] = {nums[i], i};
         }
+        std::ranges::sort(pairs);
 
         long long               score = 0;
         std::unordered_set<int> marked;
-        while (!pq.empty()) {
-            auto [val, i] = pq.top();
+        for (auto [val, i] : pairs) {
             if (marked.contains(i)) {
-                pq.pop();
                 continue;
             }
             marked.insert({i, i - 1, i + 1});
             score += val;
-            pq.pop();
         }
 
         return score;
