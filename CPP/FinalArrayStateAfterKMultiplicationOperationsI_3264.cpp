@@ -65,13 +65,8 @@ class Solution {
         while (k--) {
             auto [n, i] = pq.top();
             pq.pop();
-            n *= multiplier;
-            pq.emplace(n, i);
-        }
-        while (!pq.empty()) {
-            auto [n, i] = pq.top();
-            pq.pop();
-            nums[i] = n;
+            nums[i] = n * multiplier;
+            pq.emplace(nums[i], i);
         }
         return nums;
     }
