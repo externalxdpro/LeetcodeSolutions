@@ -52,18 +52,18 @@
 #include <algorithm>
 #include <fmt/ranges.h>
 #include <queue>
-#include <vector>
 
 class Solution {
   public:
     TreeNode *reverseOddLevels(TreeNode *root) {
-        std::vector<std::vector<TreeNode *>> levels;
-        std::queue<TreeNode *>               q{{root}};
-        while (!q.empty()) {
-            levels.emplace_back(0);
+        TreeNode              *level[20000];
+        std::queue<TreeNode *> q{{root}};
+        for (int l = 0; !q.empty(); l++) {
             int sz = q.size();
-            while (sz--) {
-                levels.back().push_back(q.front());
+            for (int i = 0; i < sz; i++) {
+                if (l % 2 == 1) {
+                    level[i] = q.front();
+                }
                 if (q.front()->left != nullptr) {
                     q.push(q.front()->left);
                 }
@@ -72,22 +72,14 @@ class Solution {
                 }
                 q.pop();
             }
-        }
-
-        for (int i = 1; i < levels.size(); i += 2) {
-            reverse(levels[i]);
+            if (l % 2 == 1) {
+                for (int i = 0; i < sz / 2; i++) {
+                    std::swap(level[i]->val, level[sz - i - 1]->val);
+                }
+            }
         }
 
         return root;
-    }
-
-  private:
-    void reverse(const std::vector<TreeNode *> &level) {
-        for (int i = 0; i < level.size() / 2; i++) {
-            int temp                         = level[i]->val;
-            level[i]->val                    = level[level.size() - i - 1]->val;
-            level[level.size() - i - 1]->val = temp;
-        }
     }
 };
 
