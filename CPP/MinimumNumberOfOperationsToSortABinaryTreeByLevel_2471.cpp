@@ -61,13 +61,14 @@ class Solution {
             return 0;
         }
 
-        std::vector<std::vector<int>> levels;
-        std::queue<TreeNode *>        q{{root}};
+        std::vector<int>       level;
+        std::queue<TreeNode *> q{{root}};
+        int                    result = 0;
         while (!q.empty()) {
-            levels.emplace_back();
+            level.clear();
             int sz = q.size();
             while (sz--) {
-                levels.back().push_back(q.front()->val);
+                level.push_back(q.front()->val);
                 if (q.front()->left != nullptr) {
                     q.push(q.front()->left);
                 }
@@ -76,10 +77,6 @@ class Solution {
                 }
                 q.pop();
             }
-        }
-
-        int result = 0;
-        for (auto &level : levels) {
             result += getMinSwaps(level);
         }
         return result;
