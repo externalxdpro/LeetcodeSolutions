@@ -29,11 +29,12 @@ pub struct Solution {}
 
 impl Solution {
     pub fn max_score_sightseeing_pair(values: Vec<i32>) -> i32 {
+        let mut max_l = vec![0; values.len()];
+        max_l[0] = values[0];
         let mut result = 0;
-        for i in 0..values.len() {
-            for j in (i + 1)..values.len() {
-                result = result.max(values[i] + values[j] - (j - i) as i32);
-            }
+        for i in 1..values.len() {
+            result = result.max(max_l[i - 1] + values[i] - i as i32);
+            max_l[i] = max_l[i - 1].max(values[i] + i as i32);
         }
         result
     }
