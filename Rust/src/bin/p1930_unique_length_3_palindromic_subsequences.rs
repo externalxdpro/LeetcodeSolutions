@@ -48,29 +48,19 @@ pub struct Solution {}
 impl Solution {
     pub fn count_palindromic_subsequence(s: String) -> i32 {
         use std::collections::HashSet;
-        let letters: HashSet<char> = s.chars().collect();
+        let set: HashSet<char> = s.chars().collect();
         let s: Vec<char> = s.chars().collect();
-        let mut result = 0;
-
-        for letter in letters {
-            let (mut i, mut j) = (-1, 0);
-
-            for k in 0..s.len() {
-                if s[k] == letter {
-                    if i == -1 {
-                        i = k as i32;
-                    }
-                    j = k as i32;
+        set.into_iter()
+            .map(|letter| {
+                let l = s.iter().position(|&x| x == letter).unwrap() + 1;
+                let r = s.iter().rposition(|&x| x == letter).unwrap();
+                if l < r {
+                    s[l..r].iter().copied().collect::<HashSet<char>>().len() as i32
+                } else {
+                    0
                 }
-            }
-
-            let mut between = HashSet::new();
-            for k in (i + 1)..j {
-                between.insert(s[k as usize]);
-            }
-            result += between.len() as i32;
-        }
-        result
+            })
+            .sum()
     }
 }
 
