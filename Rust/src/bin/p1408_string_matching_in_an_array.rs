@@ -37,19 +37,19 @@ pub struct Solution {}
 
 impl Solution {
     pub fn string_matching(words: Vec<String>) -> Vec<String> {
-        use std::collections::HashSet;
-        let mut result: HashSet<String> = HashSet::new();
-        for i in 0..words.len() {
-            for j in (i + 1)..words.len() {
-                let (word1, word2) = (&words[i], &words[j]);
-                if word1.len() < word2.len() && word2.contains(word1) {
-                    result.insert(word1.clone());
-                } else if word2.len() < word1.len() && word1.contains(word2) {
-                    result.insert(word2.clone());
+        words
+            .iter()
+            .filter_map(|word1| {
+                if words
+                    .iter()
+                    .any(|word2| word1.len() < word2.len() && word2.contains(word1))
+                {
+                    Some(word1.clone())
+                } else {
+                    None
                 }
-            }
-        }
-        result.into_iter().collect()
+            })
+            .collect()
     }
 }
 
