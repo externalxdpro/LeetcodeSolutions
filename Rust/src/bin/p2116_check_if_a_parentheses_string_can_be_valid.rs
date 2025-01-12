@@ -47,20 +47,20 @@ pub struct Solution {}
 
 impl Solution {
     pub fn can_be_valid(s: String, locked: String) -> bool {
-        use std::iter::zip;
-
         if s.len() % 2 == 1 {
             return false;
         }
 
         let (mut open, mut unlocked) = (vec![], vec![]);
-        for (i, (c, l)) in zip(s.chars(), locked.chars()).enumerate() {
+        for (i, (c, l)) in std::iter::zip(s.chars(), locked.chars()).enumerate() {
             match (c, l) {
                 (_, '0') => unlocked.push(i),
                 ('(', '1') => open.push(i),
                 (')', '1') => {
-                    if open.pop().is_some() {
-                    } else if unlocked.pop().is_some() {
+                    if open.last().is_some() {
+                        open.pop();
+                    } else if unlocked.last().is_some() {
+                        unlocked.pop();
                     } else {
                         return false;
                     }
