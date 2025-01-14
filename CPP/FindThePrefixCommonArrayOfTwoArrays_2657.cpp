@@ -36,24 +36,27 @@
 
 #include <algorithm>
 #include <fmt/ranges.h>
-#include <unordered_set>
 #include <vector>
 
 class Solution {
   public:
     std::vector<int> findThePrefixCommonArray(std::vector<int> &A,
                                               std::vector<int> &B) {
-        int                     n = A.size();
-        std::unordered_set<int> a, b;
-        std::vector<int>        result(n);
+        int              n = A.size();
+        std::vector<int> freq(n + 1, 0);
+        std::vector<int> result(n);
 
         for (int i = 0; i < n; i++) {
-            a.insert(A[i]);
-            b.insert(B[i]);
-            for (int num : a) {
-                if (b.contains(num)) {
-                    result[i]++;
-                }
+            if (i > 0) {
+                result[i] += result[i - 1];
+            }
+            freq[A[i]]++;
+            if (freq[A[i]] == 2) {
+                result[i]++;
+            }
+            freq[B[i]]++;
+            if (freq[B[i]] == 2) {
+                result[i]++;
             }
         }
 
