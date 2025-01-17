@@ -49,24 +49,7 @@ pub struct Solution {}
 
 impl Solution {
     pub fn does_valid_array_exist(derived: Vec<i32>) -> bool {
-        let n = derived.len();
-
-        let mut orig = vec![0; n];
-        for i in 0..(n - 1) {
-            orig[i + 1] = derived[i] ^ orig[i];
-        }
-        if orig[0] == derived[n - 1] ^ orig[n - 1] {
-            return true;
-        }
-
-        let mut orig = vec![1; n];
-        for i in 0..(n - 1) {
-            orig[i + 1] = derived[i] ^ orig[i];
-        }
-        if orig[0] == derived[n - 1] ^ orig[n - 1] {
-            return true;
-        }
-        false
+        derived.into_iter().sum::<i32>() % 2 == 0
     }
 }
 
