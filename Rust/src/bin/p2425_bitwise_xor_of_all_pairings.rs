@@ -35,9 +35,8 @@ pub struct Solution {}
 impl Solution {
     pub fn xor_all_nums(nums1: Vec<i32>, nums2: Vec<i32>) -> i32 {
         nums1
-            .iter()
-            .map(|&x| nums2.iter().map(|&y| x ^ y).collect::<Vec<i32>>())
-            .flatten()
+            .into_iter()
+            .map(|x| nums2.iter().map(|&y| x ^ y).fold(0, |sum, i| sum ^ i))
             .fold(0, |sum, x| sum ^ x)
     }
 }
