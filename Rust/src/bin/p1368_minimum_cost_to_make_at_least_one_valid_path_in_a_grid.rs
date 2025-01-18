@@ -42,37 +42,43 @@ pub struct Solution {}
 impl Solution {
     pub fn min_cost(grid: Vec<Vec<i32>>) -> i32 {
         let mut memo = vec![vec![i32::MAX; grid[0].len()]; grid.len()];
-        Self::recurse(&grid, (0, 0), 0, &mut memo);
-        memo[grid.len() - 1][grid[0].len() - 1]
-    }
+        memo[0][0] = 0;
 
-    fn recurse(grid: &Vec<Vec<i32>>, curr: (i32, i32), cost: i32, memo: &mut Vec<Vec<i32>>) {
-        if !Self::in_bounds(grid, curr) {
-            return;
-        }
-        let curr = (curr.0 as usize, curr.1 as usize);
-        if memo[curr.0][curr.1] <= cost {
-            return;
-        }
-        memo[curr.0][curr.1] = cost;
-        if curr == (grid.len() - 1, grid[0].len() - 1) {
-            return;
-        }
+        loop {
+            let prev = memo.clone();
 
-        const DIRS: [[i32; 2]; 5] = [[0, 0], [0, 1], [0, -1], [1, 0], [-1, 0]];
-        for d in 1..=4 {
-            let dir = DIRS[d];
-            let next = (curr.0 as i32 + dir[0], curr.1 as i32 + dir[1]);
-            if d as i32 == grid[curr.0][curr.1] {
-                Self::recurse(grid, next, cost, memo)
-            } else {
-                Self::recurse(grid, next, cost + 1, memo);
+            for i in 0..grid.len() {
+                for j in 0..grid[0].len() {
+                    if i > 0 {
+                        memo[i][j] = memo[i][j]
+                            .min(memo[i - 1][j] + if grid[i - 1][j] == 3 { 0 } else { 1 });
+                    }
+                    if j > 0 {
+                        memo[i][j] = memo[i][j]
+                            .min(memo[i][j - 1] + if grid[i][j - 1] == 1 { 0 } else { 1 });
+                    }
+                }
+            }
+
+            for i in (0..grid.len()).rev() {
+                for j in (0..grid[0].len()).rev() {
+                    if i < grid.len() - 1 {
+                        memo[i][j] = memo[i][j]
+                            .min(memo[i + 1][j] + if grid[i + 1][j] == 4 { 0 } else { 1 });
+                    }
+                    if j < grid[0].len() - 1 {
+                        memo[i][j] = memo[i][j]
+                            .min(memo[i][j + 1] + if grid[i][j + 1] == 2 { 0 } else { 1 });
+                    }
+                }
+            }
+
+            if prev == memo {
+                break;
             }
         }
-    }
 
-    fn in_bounds(grid: &Vec<Vec<i32>>, (i, j): (i32, i32)) -> bool {
-        i >= 0 && i < grid.len() as i32 && j >= 0 && j < grid[0].len() as i32
+        memo[grid.len() - 1][grid[0].len() - 1]
     }
 }
 
