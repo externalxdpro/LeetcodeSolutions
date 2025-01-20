@@ -38,35 +38,26 @@ pub struct Solution {}
 
 impl Solution {
     pub fn first_complete_index(arr: Vec<i32>, mat: Vec<Vec<i32>>) -> i32 {
-        use std::collections::HashMap;
-
-        let mut pos: HashMap<i32, (usize, usize)> = HashMap::new();
-        let mut row_counts: HashMap<usize, i32> = HashMap::new();
-        let mut col_counts: HashMap<usize, i32> = HashMap::new();
+        let mut pos = vec![(0, 0); arr.len() + 1];
+        let mut row_counts = vec![mat[0].len(); mat.len()];
+        let mut col_counts = vec![mat.len(); mat[0].len()];
         for i in 0..mat.len() {
             for j in 0..mat[0].len() {
-                pos.insert(mat[i][j], (i, j));
+                pos[mat[i][j] as usize] = (i, j);
             }
-        }
-        for i in 0..mat.len() {
-            row_counts.insert(i, mat[0].len() as i32);
-        }
-        for j in 0..mat[0].len() {
-            col_counts.insert(j, mat.len() as i32);
         }
 
         for (i, curr) in arr.into_iter().enumerate() {
-            let &(mi, mj) = pos.get(&curr).unwrap();
-            row_counts.entry(mi).and_modify(|x| *x -= 1);
-            col_counts.entry(mj).and_modify(|x| *x -= 1);
-            if let Some(0) = row_counts.get(&mi) {
+            let (mi, mj) = pos[curr as usize];
+            row_counts[mi] -= 1;
+            col_counts[mj] -= 1;
+            if row_counts[mi] == 0 {
                 return i as i32;
             }
-            if let Some(0) = col_counts.get(&mj) {
+            if col_counts[mj] == 0 {
                 return i as i32;
             }
         }
-
         -1
     }
 }
