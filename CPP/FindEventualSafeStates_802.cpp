@@ -42,32 +42,29 @@
 //     The number of edges in the graph will be in the range [1, 4 * 104].
 
 #include <fmt/ranges.h>
-#include <set>
 #include <vector>
 
 class Solution {
   public:
     std::vector<int> eventualSafeNodes(std::vector<std::vector<int>> &graph) {
-        std::vector<bool> visited(graph.size());
-
-        // Make a reverse stack (all of the elements in the set are not in the
-        // stack)
-        std::set<int> stack;
-        for (int i = 0; i < graph.size(); i++) {
-            stack.insert(i);
-        }
-
+        std::vector<bool> visited(graph.size()), stack(graph.size());
         for (int i = 0; i < graph.size(); i++) {
             dfs(graph, i, visited, stack);
         }
 
-        return std::vector(stack.begin(), stack.end());
+        std::vector<int> result;
+        for (int i = 0; i < graph.size(); i++) {
+            if (!stack[i]) {
+                result.push_back(i);
+            }
+        }
+        return result;
     }
 
   private:
     bool dfs(std::vector<std::vector<int>> &graph, int curr,
-             std::vector<bool> &visited, std::set<int> &stack) {
-        if (!stack.contains(curr)) {
+             std::vector<bool> &visited, std::vector<bool> &stack) {
+        if (stack[curr]) {
             return true;
         }
         if (visited[curr]) {
@@ -75,13 +72,13 @@ class Solution {
         }
 
         visited[curr] = true;
-        stack.erase(curr);
+        stack[curr]   = true;
         for (int n : graph[curr]) {
             if (dfs(graph, n, visited, stack)) {
                 return true;
             }
         }
-        stack.insert(curr);
+        stack[curr] = false;
         return false;
     }
 };
