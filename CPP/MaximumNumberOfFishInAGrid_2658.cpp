@@ -47,29 +47,24 @@
 class Solution {
   public:
     int findMaxFish(std::vector<std::vector<int>> &grid) {
-        std::vector<std::vector<bool>> visited(
-            grid.size(), std::vector(grid[0].size(), false));
-
         int max = 0;
         for (int i = 0; i < grid.size(); i++) {
             for (int j = 0; j < grid[0].size(); j++) {
-                max = std::max(max, traverse(grid, i, j, visited));
+                max = std::max(max, traverse(grid, i, j));
             }
         }
         return max;
     }
 
   private:
-    int traverse(std::vector<std::vector<int>> &grid, int i, int j,
-                 std::vector<std::vector<bool>> &visited) {
-        if (!isValid(grid, i, j) || visited[i][j]) {
+    int traverse(std::vector<std::vector<int>> &grid, int i, int j) {
+        if (!isValid(grid, i, j)) {
             return 0;
         }
-        visited[i][j] = true;
-        return grid[i][j] + traverse(grid, i, j + 1, visited) +
-               traverse(grid, i, j - 1, visited) +
-               traverse(grid, i + 1, j, visited) +
-               traverse(grid, i - 1, j, visited);
+        int curr   = grid[i][j];
+        grid[i][j] = 0;
+        return curr + traverse(grid, i, j + 1) + traverse(grid, i, j - 1) +
+               traverse(grid, i + 1, j) + traverse(grid, i - 1, j);
     }
 
     bool isValid(std::vector<std::vector<int>> &grid, int i, int j) {
