@@ -61,20 +61,20 @@ class Solution {
   public:
     std::vector<int> queryResults(int                            limit,
                                   std::vector<std::vector<int>> &queries) {
-        std::unordered_map<int, std::unordered_set<int>> colours;
-        std::unordered_map<int, int>                     balls;
-        std::vector<int>                                 result;
+        std::unordered_map<int, int> colours;
+        std::unordered_map<int, int> balls;
+        std::vector<int>             result;
         result.reserve(queries.size());
         for (auto &q : queries) {
             int b = q[0], c = q[1];
             if (balls.contains(b)) {
-                colours[balls[b]].erase(b);
-                if (colours[balls[b]].empty()) {
+                colours[balls[b]]--;
+                if (colours[balls[b]] == 0) {
                     colours.erase(balls[b]);
                 }
             }
             balls[b] = c;
-            colours[c].insert(b);
+            colours[c]++;
             result.push_back(colours.size());
         }
         return result;
