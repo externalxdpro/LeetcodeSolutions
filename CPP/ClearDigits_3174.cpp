@@ -45,23 +45,20 @@
 class Solution {
   public:
     std::string clearDigits(std::string &s) {
-        std::string       result;
-        std::stack<int>   nonDigits;
-        std::vector<bool> marked(s.size());
+        std::string     result;
+        std::stack<int> nonDigits;
         for (int i = 0; i < s.size(); i++) {
             if (s[i] >= '0' && s[i] <= '9') {
-                marked[i]               = true;
-                marked[nonDigits.top()] = true;
                 nonDigits.pop();
             } else {
                 nonDigits.push(i);
             }
         }
-        for (int i = 0; i < marked.size(); i++) {
-            if (!marked[i]) {
-                result.push_back(s[i]);
-            }
+        while (!nonDigits.empty()) {
+            result.push_back(s[nonDigits.top()]);
+            nonDigits.pop();
         }
+        std::ranges::reverse(result);
         return result;
     }
 };
