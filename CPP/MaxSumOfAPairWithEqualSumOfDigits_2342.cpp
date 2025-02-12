@@ -39,19 +39,16 @@
 class Solution {
   public:
     int maximumSum(std::vector<int> &nums) {
-        std::unordered_map<int, std::priority_queue<int>> sums;
-        for (int i : nums) {
-            sums[sumDigits(i)].push(i);
-        }
-        int result = -1;
-        for (auto &[_, pq] : sums) {
-            if (pq.size() < 2) {
-                continue;
+        std::vector<int> sums(82, -1);
+        int              result = -1;
+        for (int num : nums) {
+            int sum = sumDigits(num);
+            if (sums[sum] != -1) {
+                result    = std::max(result, sums[sum] + num);
+                sums[sum] = std::max(sums[sum], num);
+            } else {
+                sums[sum] = num;
             }
-            int curr = pq.top();
-            pq.pop();
-            curr += pq.top();
-            result = std::max(result, curr);
         }
         return result;
     }
