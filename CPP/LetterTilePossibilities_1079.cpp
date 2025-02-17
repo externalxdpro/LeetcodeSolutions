@@ -29,33 +29,31 @@
 //     tiles consists of uppercase English letters.
 
 #include <fmt/ranges.h>
-#include <unordered_set>
 #include <vector>
 
 class Solution {
   public:
     int numTilePossibilities(std::string &tiles) {
-        std::unordered_set<std::string> sequences;
-        std::vector<bool>               used(tiles.size());
-        getSequences(tiles, "", used, sequences);
-        return sequences.size() - 1;
+        int counts[26] = {0};
+        for (char c : tiles) {
+            counts[c - 'A']++;
+        }
+        return getSequences(counts);
     }
 
   private:
-    void getSequences(std::string &tiles, std::string curr,
-                      std::vector<bool>               &used,
-                      std::unordered_set<std::string> &sequences) {
-        if (sequences.contains(curr)) {
-            return;
-        }
-        sequences.insert(curr);
-        for (int i = 0; i < tiles.size(); i++) {
-            if (!used[i]) {
-                used[i] = true;
-                getSequences(tiles, curr + tiles[i], used, sequences);
-                used[i] = false;
+    int getSequences(int counts[26]) {
+        int result = 0;
+        for (int i = 0; i < 26; i++) {
+            if (counts[i] == 0) {
+                continue;
             }
+            result++;
+            counts[i]--;
+            result += getSequences(counts);
+            counts[i]++;
         }
+        return result;
     }
 };
 
