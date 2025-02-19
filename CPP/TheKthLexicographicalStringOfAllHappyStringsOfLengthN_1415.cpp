@@ -50,7 +50,7 @@ class Solution {
     std::string getHappyString(int n, int k) {
         std::vector<std::string> strings;
         std::string              temp;
-        generate(n, temp, strings);
+        generate(n, k, temp, strings);
         if (k > strings.size()) {
             return "";
         }
@@ -58,7 +58,8 @@ class Solution {
     }
 
   private:
-    void generate(int n, std::string &curr, std::vector<std::string> &strings) {
+    void generate(int n, int k, std::string &curr,
+                  std::vector<std::string> &strings) {
         if (curr.size() == n) {
             strings.push_back(curr);
             return;
@@ -68,8 +69,11 @@ class Solution {
                 continue;
             }
             curr.push_back(i);
-            generate(n, curr, strings);
+            generate(n, k, curr, strings);
             curr.pop_back();
+            if (strings.size() == k) {
+                return;
+            }
         }
     }
 };
