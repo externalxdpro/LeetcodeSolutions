@@ -33,37 +33,22 @@
 //     All the strings of nums are unique.
 
 #include <fmt/ranges.h>
-#include <unordered_set>
 #include <vector>
 
 class Solution {
   public:
     std::string findDifferentBinaryString(std::vector<std::string> &nums) {
-        std::unordered_set<std::string> set(nums.begin(), nums.end());
-        std::string                     curr(nums[0].size(), '0');
-        while (true) {
-            if (!set.contains(curr)) {
-                return curr;
-            }
-            increase(curr);
+        std::string result;
+        for (int i = 0; i < nums.size(); i++) {
+            result += (nums[i][i] == '0') ? '1' : '0';
         }
-    }
-
-  private:
-    void increase(std::string &curr) {
-        for (int i = curr.size() - 1; i >= 0; i--) {
-            if (curr[i] == '0') {
-                curr[i] = '1';
-                break;
-            }
-            curr[i] = '0';
-        }
+        return result;
     }
 };
 
 int main(int argc, char *argv[]) {
     std::vector<std::pair<std::vector<std::string>, std::string>> tests = {
-        {{"01", "10"}, "00"},
+        {{"01", "10"}, "11"},
         {{"00", "01"}, "10"},
         {{"111", "011", "001"}, "000"},
     };
