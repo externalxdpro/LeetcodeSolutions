@@ -39,26 +39,21 @@
 class Solution {
   public:
     int numOfSubarrays(std::vector<int> &arr) {
-        std::vector<int> prefix(arr.size());
-        prefix[0] = arr[0];
-        for (int i = 1; i < arr.size(); i++) {
-            prefix[i] = prefix[i - 1] + arr[i];
-        }
-
+        int       sum = 0;
         int       odd = 0, even = 1;
         long long result = 0;
-        for (int i = 0; i < prefix.size(); i++) {
-            if (prefix[i] % 2 == 0) {
+        for (int i : arr) {
+            sum += i;
+            if (sum % 2 == 0) {
                 result += odd;
                 even++;
             } else {
                 result += even;
                 odd++;
             }
-            result %= (long long)(1e9 + 7);
         }
 
-        return result;
+        return result % (long long)(1e9 + 7);
     }
 };
 
