@@ -49,22 +49,22 @@
 class Solution {
   public:
     std::vector<int> pivotArray(std::vector<int> &nums, int pivot) {
-        int                             l = 0, r = nums.size() - 1;
-        std::vector<std::optional<int>> temp(nums.size(), std::nullopt);
+        int              l = 0, r = nums.size() - 1;
+        std::vector<int> result(nums.size());
         for (int i = 0; i < nums.size(); i++) {
             if (nums[i] < pivot) {
-                temp[l++] = nums[i];
+                result[l++] = nums[i];
             }
         }
         for (int i = nums.size() - 1; i >= 0; i--) {
             if (nums[i] > pivot) {
-                temp[r--] = nums[i];
+                result[r--] = nums[i];
             }
         }
-        std::transform(
-            temp.begin(), temp.end(), nums.begin(),
-            [&](std::optional<int> x) { return x.has_value() ? *x : pivot; });
-        return nums;
+        for (int i = l; i <= r; i++) {
+            result[i] = pivot;
+        }
+        return result;
     }
 };
 
