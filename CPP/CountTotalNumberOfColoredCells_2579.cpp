@@ -38,13 +38,7 @@
 class Solution {
   public:
     long long coloredCells(int n) {
-        long long result = 1;
-        int       inc    = 4;
-        for (int i = 1; i < n; i++) {
-            result += inc;
-            inc += 4;
-        }
-        return result;
+        return 1 + 2 * (long long)(n - 1) * (long long)n;
     }
 };
 
