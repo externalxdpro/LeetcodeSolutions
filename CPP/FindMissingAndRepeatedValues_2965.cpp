@@ -35,34 +35,30 @@
 
 #include <algorithm>
 #include <fmt/ranges.h>
-#include <set>
 #include <vector>
 
 class Solution {
   public:
     std::vector<int>
     findMissingAndRepeatedValues(std::vector<std::vector<int>> &grid) {
-        std::set<int>    found;
+        std::vector<int> counts(grid.size() * grid.size() + 1);
         std::vector<int> result(2);
+
         for (int i = 0; i < grid.size(); i++) {
-            for (int j = 0; j < grid[0].size(); j++) {
-                if (found.contains(grid[i][j])) {
+            for (int j = 0; j < grid.size(); j++) {
+                counts[grid[i][j]]++;
+                if (counts[grid[i][j]] == 2) {
                     result[0] = grid[i][j];
                 }
-                found.insert(grid[i][j]);
             }
         }
-        int curr = 1;
-        for (int num : found) {
-            if (curr != num) {
-                result[1] = curr;
+        for (int i = 1; i <= grid.size() * grid.size(); i++) {
+            if (counts[i] == 0) {
+                result[1] = i;
                 break;
             }
-            curr++;
         }
-        if (result[1] == 0) {
-            result[1] = grid.size() * grid.size();
-        }
+
         return result;
     }
 };
