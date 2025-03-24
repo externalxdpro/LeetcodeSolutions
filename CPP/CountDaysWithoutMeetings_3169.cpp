@@ -56,18 +56,14 @@ class Solution {
   public:
     int countDays(int days, std::vector<std::vector<int>> &meetings) {
         std::ranges::sort(meetings);
-        for (int i = 0; i < meetings.size() - 1; i++) {
-            if (meetings[i][1] >= meetings[i + 1][0]) {
-                meetings[i][1] = std::max(meetings[i][1], meetings[i + 1][1]);
-                meetings.erase(meetings.begin() + i + 1);
-                i--;
-            }
-        }
-        int result = days;
+        int result = 0, last = 0;
         for (auto &m : meetings) {
-            result -= m[1] - m[0] + 1;
+            if (m[0] > last + 1) {
+                result += m[0] - last - 1;
+            }
+            last = std::max(last, m[1]);
         }
-        return result;
+        return result + days - last;
     }
 };
 
