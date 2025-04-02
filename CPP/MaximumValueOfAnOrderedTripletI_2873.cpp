@@ -45,16 +45,18 @@
 class Solution {
   public:
     long long maximumTripletValue(std::vector<int> &nums) {
-        long long max = std::numeric_limits<long long>::min();
-        for (int i = 0; i < nums.size(); i++) {
-            for (int j = i + 1; j < nums.size(); j++) {
-                for (int k = j + 1; k < nums.size(); k++) {
-                    max =
-                        std::max(max, ((long long)nums[i] - nums[j]) * nums[k]);
-                }
-            }
+        if (nums.size() < 3) {
+            return 0;
         }
-        return std::max(max, 0LL);
+        long long maxi   = nums[0];
+        long long maxij  = std::numeric_limits<long long>::min();
+        long long maxijk = 0;
+        for (int j = 1; j < nums.size() - 1; j++) {
+            maxij  = std::max(maxij, maxi - nums[j]);
+            maxi   = std::max(maxi, (long long)nums[j]);
+            maxijk = std::max(maxijk, maxij * nums[j + 1]);
+        }
+        return maxijk;
     }
 };
 
