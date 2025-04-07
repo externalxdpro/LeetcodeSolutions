@@ -22,6 +22,7 @@
 //     1 <= nums.length <= 200
 //     1 <= nums[i] <= 100
 
+#include <bitset>
 #include <fmt/ranges.h>
 #include <numeric>
 #include <vector>
@@ -33,27 +34,14 @@ class Solution {
         if (sum % 2 != 0) {
             return false;
         }
-        std::vector<std::vector<int>> memo(nums.size(),
-                                           std::vector(sum / 2 + 1, -1));
-        return recurse(nums, 0, sum / 2, memo);
-    }
-
-  private:
-    bool recurse(std::vector<int> &nums, int i, int target,
-                 std::vector<std::vector<int>> &memo) {
-        if (target == 0) {
-            return true;
+        std::bitset<10001> bit(1);
+        for (int i : nums) {
+            bit |= bit << i;
+            if (bit[sum / 2]) {
+                return bit[sum / 2];
+            }
         }
-        if (i == nums.size() || target < 0) {
-            return false;
-        }
-        if (memo[i][target] != -1) {
-            return memo[i][target];
-        }
-        bool take = recurse(nums, i + 1, target - nums[i], memo);
-        bool skip = recurse(nums, i + 1, target, memo);
-
-        return memo[i][target] = take || skip;
+        return bit[sum / 2];
     }
 };
 
