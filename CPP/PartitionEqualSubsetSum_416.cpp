@@ -23,27 +23,37 @@
 //     1 <= nums[i] <= 100
 
 #include <fmt/ranges.h>
+#include <numeric>
 #include <vector>
 
 class Solution {
   public:
     bool canPartition(std::vector<int> &nums) {
-        std::vector<std::vector<int>> memo(200, std::vector(20001, -1));
-        return recurse(nums, 0, 0, 0, memo);
+        int sum = std::accumulate(nums.begin(), nums.end(), 0);
+        if (sum % 2 != 0) {
+            return false;
+        }
+        std::vector<std::vector<int>> memo(nums.size(),
+                                           std::vector(sum / 2 + 1, -1));
+        return recurse(nums, 0, sum / 2, memo);
     }
 
-    bool recurse(std::vector<int> &nums, int i, int lsum, int rsum,
+  private:
+    bool recurse(std::vector<int> &nums, int i, int target,
                  std::vector<std::vector<int>> &memo) {
-        if (i == nums.size()) {
-            return lsum == rsum;
+        if (target == 0) {
+            return true;
         }
-        if (memo[i][lsum] != -1) {
-            return memo[i][lsum];
+        if (i == nums.size() || target < 0) {
+            return false;
         }
-        bool l = recurse(nums, i + 1, lsum + nums[i], rsum, memo);
-        bool r = recurse(nums, i + 1, lsum, rsum + nums[i], memo);
+        if (memo[i][target] != -1) {
+            return memo[i][target];
+        }
+        bool take = recurse(nums, i + 1, target - nums[i], memo);
+        bool skip = recurse(nums, i + 1, target, memo);
 
-        return memo[i][lsum] = l | r;
+        return memo[i][target] = take || skip;
     }
 };
 
