@@ -29,44 +29,55 @@
 // countAndSay(3) = say "11" = two 1's = "21"
 // countAndSay(4) = say "21" = one 2 + one 1 = "12" + "11" = "1211"
 
-#include <format>
-#include <iostream>
-#include <map>
+#include <algorithm>
+#include <fmt/ranges.h>
 #include <vector>
 
-std::string countAndSay(int n) {
-    if (n == 1)
-        return "1";
-
-    std::vector<std::pair<char, int>> occurences;
-    std::string last = countAndSay(n - 1);
-    std::string result = "";
-
-    occurences.emplace_back(last[0], 1);
-    int prev = last[0];
-
-    for (int i = 1; i < last.size(); i++) {
-        if (prev == last[i]) {
-            occurences.back().second++;
-        } else {
-            occurences.emplace_back(last[i], 1);
-            prev = last[i];
+class Solution {
+  public:
+    std::string countAndSay(int n) {
+        if (n == 1) {
+            return "1";
         }
+        std::vector<std::pair<char, int>> counts;
+        std::string                       s = "11";
+        for (int i = 3; i <= n; i++) {
+            char prev = s[0];
+            counts    = {{prev, 1}};
+            for (int i = 1; i < s.size(); i++) {
+                if (s[i] == prev) {
+                    counts.back().second++;
+                } else {
+                    counts.emplace_back(s[i], 1);
+                    prev = s[i];
+                }
+            }
+            s = toString(counts);
+        }
+        return s;
     }
 
-    for (int i = 0; i < occurences.size(); i++) {
-        result += std::to_string(occurences[i].second) + occurences[i].first;
+  private:
+    std::string toString(std::vector<std::pair<char, int>> &counts) {
+        std::string result;
+        result.reserve(counts.size() << 1);
+        for (auto &[c, count] : counts) {
+            result += std::to_string(count) + c;
+        }
+        return result;
     }
+};
 
-    return result;
-}
+int main(int argc, char *argv[]) {
+    std::vector<std::pair<int, std::string>> tests = {
+        {4, "1211"},
+        {1, "1"},
+    };
 
-int main() {
-    std::vector<int> tests = {1, 2, 3, 4, 5, 6};
-    // std::vector<int> tests = {2};
-
-    for (int test : tests) {
-        std::cout << countAndSay(test) << std::endl;
+    Solution solution;
+    for (auto &[test, ans] : tests) {
+        auto result = solution.countAndSay(test);
+        fmt::println("{} {}: {}", result == ans ? "✅" : "❌", test, result);
     }
 
     return 0;
