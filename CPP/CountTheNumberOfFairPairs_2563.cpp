@@ -31,27 +31,27 @@
 
 #include <algorithm>
 #include <fmt/ranges.h>
-#include <functional>
 #include <vector>
 
 class Solution {
   public:
     long long countFairPairs(std::vector<int> &nums, int lower, int upper) {
-        std::function<long long(int)> lowerBound = [&](int val) -> long long {
-            int       l = 0, r = nums.size() - 1;
-            long long result = 0;
-            while (l < r) {
-                if (nums[l] + nums[r] < val) {
-                    result += r - l;
-                    l++;
-                } else {
-                    r--;
-                }
+        std::ranges::sort(nums);
+        return lowerBound(nums, upper + 1) - lowerBound(nums, lower);
+    }
+
+  private:
+    long long lowerBound(std::vector<int> &nums, int val) {
+        int       l = 0, r = nums.size() - 1;
+        long long result = 0;
+        while (l < r) {
+            if (nums[l] + nums[r] < val) {
+                result += r - l++;
+            } else {
+                r--;
             }
-            return result;
-        };
-        std::sort(nums.begin(), nums.end());
-        return lowerBound(upper + 1) - lowerBound(lower);
+        }
+        return result;
     }
 };
 
