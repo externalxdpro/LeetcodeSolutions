@@ -42,11 +42,13 @@
 class Solution {
   public:
     std::vector<int> buildArray(std::vector<int> &nums) {
-        std::vector<int> result(nums.size());
         for (int i = 0; i < nums.size(); i++) {
-            result[i] = nums[nums[i]];
+            nums[i] += 1000 * (nums[nums[i]] % 1000);
         }
-        return result;
+        for (int i = 0; i < nums.size(); i++) {
+            nums[i] /= 1000;
+        }
+        return nums;
     }
 };
 
