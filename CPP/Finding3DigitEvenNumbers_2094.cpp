@@ -43,35 +43,39 @@
 //     0 <= digits[i] <= 9
 
 #include <fmt/ranges.h>
-#include <set>
 #include <vector>
 
 class Solution {
   public:
-    std::vector<int> findEvenNumbers(std::vector<int> &d) {
-        std::set<int> result;
-
-        for (int i = 0; i < d.size(); i++) {
-            if (d[i] == 0) {
-                continue;
-            }
-            for (int j = 0; j < d.size(); j++) {
-                if (j == i) {
-                    continue;
-                }
-                for (int k = 0; k < d.size(); k++) {
-                    if (k == i || k == j) {
-                        continue;
-                    }
-                    if (d[k] % 2 == 0) {
-                        int num = d[i] * 100 + d[j] * 10 + d[k];
-                        result.insert(num);
-                    }
-                }
-            }
+    std::vector<int> findEvenNumbers(std::vector<int> &digits) {
+        int counts[10] = {0};
+        for (int i : digits) {
+            counts[i]++;
         }
 
-        return std::vector(result.begin(), result.end());
+        std::vector<int> result;
+        for (int i = 1; i < 10; i++) {
+            if (counts[i] == 0) {
+                continue;
+            }
+            counts[i]--;
+            for (int j = 0; j < 10; j++) {
+                if (counts[j] == 0) {
+                    continue;
+                }
+                counts[j]--;
+                for (int k = 0; k < 10; k += 2) {
+                    if (counts[k] == 0) {
+                        continue;
+                    }
+                    result.push_back(i * 100 + j * 10 + k);
+                }
+                counts[j]++;
+            }
+            counts[i]++;
+        }
+
+        return result;
     }
 };
 
