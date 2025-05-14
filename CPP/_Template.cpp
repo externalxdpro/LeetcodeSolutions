@@ -1,4 +1,4 @@
-// [#] Name
+// #. Name
 // Difficulty:
 
 // Description
@@ -7,8 +7,10 @@
 #include <fmt/ranges.h>
 #include <vector>
 
+class Solution {};
+
 int main(int argc, char *argv[]) {
-    // std::vector<> tests = {};
+    // std::vector<std::pair<>> tests = {};
 
     // Solution solution;
     // for (auto &[test, ans] : tests) {
