@@ -65,23 +65,18 @@ class Solution {
   public:
     long long maximumValueSum(std::vector<int> &nums, int k,
                               std::vector<std::vector<int>> &edges) {
-        std::vector<std::vector<long long>> memo(nums.size(),
-                                                 std::vector<long long>(2, -1));
-        return recurse(nums, k, 0, true, memo);
-    }
-
-  private:
-    long long recurse(std::vector<int> &nums, int k, int i, bool isEven,
-                      std::vector<std::vector<long long>> &memo) {
-        if (i == nums.size()) {
-            return isEven ? 0 : std::numeric_limits<int>::min();
+        long long result = 0;
+        int       n      = 0;
+        long long d      = std::numeric_limits<int>::max();
+        for (int i : nums) {
+            long long x = i ^ k;
+            result += std::max((long long)i, x);
+            if (i < x) {
+                n = 1 - n;
+            }
+            d = std::min(d, std::abs(i - x));
         }
-        if (memo[i][isEven] != -1) {
-            return memo[i][isEven];
-        }
-        long long take = (nums[i] ^ k) + recurse(nums, k, i + 1, !isEven, memo);
-        long long skip = nums[i] + recurse(nums, k, i + 1, isEven, memo);
-        return memo[i][isEven] = std::max(take, skip);
+        return result - n * d;
     }
 };
 
