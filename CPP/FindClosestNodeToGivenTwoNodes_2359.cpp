@@ -44,10 +44,7 @@
 //     0 <= node1, node2 < n
 
 #include <algorithm>
-#include <climits>
 #include <fmt/ranges.h>
-#include <optional>
-#include <queue>
 #include <vector>
 
 class Solution {
@@ -55,13 +52,11 @@ class Solution {
     int closestMeetingNode(std::vector<int> &edges, int node1, int node2) {
         auto dists1 = dists(edges, node1);
         auto dists2 = dists(edges, node2);
-
-        std::optional<int> min    = std::nullopt;
-        int                result = -1;
+        int min = -1, result = -1;
         for (int i = 0; i < edges.size(); i++) {
-            if (dists1[i].has_value() && dists2[i].has_value() &&
-                std::max(dists1[i], dists2[i]) < min.value_or(INT_MAX)) {
-                min    = std::max(dists1[i].value(), dists2[i].value());
+            if (dists1[i] != -1 && dists2[i] != -1 &&
+                (min == -1 || std::max(dists1[i], dists2[i]) < min)) {
+                min = std::max(dists1[i], dists2[i]);
                 result = i;
             }
         }
@@ -69,23 +64,13 @@ class Solution {
     }
 
   private:
-    std::vector<std::optional<int>> dists(std::vector<int> &edges, int start) {
-        std::vector<std::optional<int>> result(edges.size());
-        std::vector<bool>               visited(edges.size());
-        std::queue<int>                 q{{start}};
-        int                             dist = 0;
-        while (!q.empty()) {
-            int sz = q.size();
-            while (sz--) {
-                int curr = q.front();
-                q.pop();
-                if (curr == -1 || visited[curr]) {
-                    continue;
-                }
-                visited[curr] = true;
-                result[curr]  = std::min(result[curr].value_or(INT_MAX), dist);
-                q.push(edges[curr]);
-            }
+    std::vector<int> dists(std::vector<int> &edges, int start) {
+        std::vector<int> result(edges.size(), -1);
+        int curr = start;
+        int dist = 0;
+        while (curr != -1 && result[curr] == -1) {
+            result[curr] = dist;
+            curr = edges[curr];
             dist++;
         }
         return result;
