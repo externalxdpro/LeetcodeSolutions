@@ -58,38 +58,31 @@ class Solution {
                    std::vector<std::vector<int>> &keys,
                    std::vector<std::vector<int>> &containedBoxes,
                    std::vector<int> &initialBoxes) {
-        int n = status.size();
-        std::vector<bool> currBoxes(n), used(n);
-        std::queue<int> q;
+        std::deque<int> q(initialBoxes.begin(), initialBoxes.end());
         int result = 0;
 
-        for (int b : initialBoxes) {
-            currBoxes[b] = true;
-            if (status[b]) {
-                q.push(b);
-                used[b] = true;
-                result += candies[b];
-            }
-        }
-
         while (!q.empty()) {
-            int curr = q.front();
-            q.pop();
-            for (int k : keys[curr]) {
-                status[k] = 1;
-                if (!used[k] && currBoxes[k]) {
-                    q.push(k);
-                    used[k] = true;
-                    result += candies[k];
+            int sz = q.size();
+            std::vector<int> curr, used;
+            while (sz--) {
+                int b = q.front();
+                q.pop_front();
+                curr.push_back(b);
+                if (status[b]) {
+                    result += candies[b];
+                    for (int k : keys[b]) {
+                        status[k] = 1;
+                    }
+                    for (int n : containedBoxes[b]) {
+                        q.push_back(n);
+                    }
+                } else {
+                    q.push_back(b);
+                    used.push_back(b);
                 }
             }
-            for (int b : containedBoxes[curr]) {
-                currBoxes[b] = true;
-                if (!used[b] && status[b]) {
-                    q.push(b);
-                    used[b] = true;
-                    result += candies[b];
-                }
+            if (curr == used) {
+                break;
             }
         }
 
