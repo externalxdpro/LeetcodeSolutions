@@ -25,9 +25,22 @@ pub struct Solution {}
 
 impl Solution {
     pub fn lexical_order(n: i32) -> Vec<i32> {
-        let mut nums: Vec<String> = (1..=n).into_iter().map(|x| x.to_string()).collect();
-        nums.sort_unstable();
-        nums.into_iter().map(|x| x.parse::<i32>().unwrap()).collect()
+        let mut result: Vec<i32> = vec![];
+        for i in 1..=9 {
+            Self::recurse(i, n, &mut result);
+        }
+        result
+    }
+
+    fn recurse(curr: i32, lim: i32, result: &mut Vec<i32>) {
+        if curr > lim {
+            return;
+        }
+        result.push(curr);
+        for i in 0..=9 {
+            let num = curr * 10 + i;
+            Self::recurse(num, lim, result);
+        }
     }
 }
 
