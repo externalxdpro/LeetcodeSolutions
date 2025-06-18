@@ -59,21 +59,16 @@ pub struct Solution {}
 impl Solution {
     pub fn divide_array(mut nums: Vec<i32>, k: i32) -> Vec<Vec<i32>> {
         nums.sort_unstable();
-        let grouped: Vec<Vec<i32>> = nums
-            .chunks(3)
+        nums.chunks(3)
             .map(|x| {
                 if x[2] - x[0] > k {
-                    vec![]
+                    None
                 } else {
-                    vec![x[0], x[1], x[2]]
+                    Some(x.to_vec())
                 }
             })
-            .collect();
-        if grouped.iter().any(|x| x.is_empty()) {
-            vec![]
-        } else {
-            grouped
-        }
+            .collect::<Option<Vec<Vec<i32>>>>()
+            .unwrap_or_default()
     }
 }
 
