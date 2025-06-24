@@ -39,12 +39,9 @@ pub struct Solution {}
 
 impl Solution {
     pub fn find_k_distant_indices(nums: Vec<i32>, key: i32, k: i32) -> Vec<i32> {
-        use std::cmp::{max, min};
-        let k = k as usize;
         let keys = (0..nums.len()).filter(|&j| nums[j] == key);
-        (0..nums.len())
-            .filter(|&i| keys.clone().any(|j| max(i, j) - min(i, j) <= k))
-            .map(|x| x as i32)
+        (0..(nums.len() as i32))
+            .filter(|&i| keys.clone().any(|j| (i - j as i32).abs() <= k))
             .collect()
     }
 }
