@@ -42,10 +42,9 @@ pub struct Solution {}
 impl Solution {
     pub fn max_subsequence(nums: Vec<i32>, k: i32) -> Vec<i32> {
         let mut nums: Vec<_> = nums.into_iter().enumerate().collect();
-        nums.sort_unstable_by(|&a, &b| b.1.cmp(&a.1));
-        let mut nums: Vec<_> = nums.into_iter().take(k as usize).collect();
-        nums.sort_unstable();
-        nums.into_iter().map(|(_, v)| v).collect()
+        nums.sort_unstable_by(|a, b| b.1.cmp(&a.1));
+        nums[..(k as usize)].sort_unstable();
+        nums.into_iter().take(k as usize).map(|(_, v)| v).collect()
     }
 }
 
