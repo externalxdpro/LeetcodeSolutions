@@ -53,26 +53,13 @@ class Solution {
 
         int result = 0;
         for (int l = 0; l < nums.size(); l++) {
-            int r = search(nums, target - nums[l]) - 1;
+            int r = std::ranges::upper_bound(nums, target - nums[l]) -
+                    nums.begin() - 1;
             if (l <= r) {
                 result = (result + pow[r - l]) % MOD;
             }
         }
         return result;
-    }
-
-  private:
-    int search(std::vector<int> &nums, int target) {
-        int l = 0, r = nums.size() - 1;
-        while (l <= r) {
-            int m = l + (r - l) / 2;
-            if (nums[m] <= target) {
-                l = m + 1;
-            } else {
-                r = m - 1;
-            }
-        }
-        return l;
     }
 };
 
