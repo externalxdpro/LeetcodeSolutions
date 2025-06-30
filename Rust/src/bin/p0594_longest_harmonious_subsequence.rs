@@ -47,21 +47,20 @@ pub struct Solution {}
 // submission codes start here
 
 impl Solution {
-    pub fn find_lhs(nums: Vec<i32>) -> i32 {
-        use std::collections::HashMap;
-        let freq: HashMap<i32, i32> = nums.into_iter().fold(HashMap::new(), |mut acc, x| {
-            acc.entry(x).and_modify(|v| *v += 1).or_insert(1);
-            acc
-        });
+    pub fn find_lhs(mut nums: Vec<i32>) -> i32 {
+        nums.sort_unstable();
 
         let mut result = 0;
-        for (i, v) in freq.iter() {
-            if let Some(&x) = freq.get(&(i + 1)) {
-                result = std::cmp::max(result, v + x);
+        let mut l = 0;
+        for r in 1..nums.len() {
+            while nums[r] - nums[l] > 1 {
+                l += 1;
+            }
+            if nums[r] - nums[l] == 1 {
+                result = result.max(r - l + 1);
             }
         }
-
-        result
+        result as i32
     }
 }
 
