@@ -33,15 +33,15 @@ pub struct Solution {}
 // submission codes start here
 
 impl Solution {
-    pub fn find_lucky(arr: Vec<i32>) -> i32 {
-        use std::collections::BTreeMap;
-        let freq = arr.into_iter().fold(BTreeMap::new(), |mut acc, x| {
-            acc.entry(x).and_modify(|e| *e += 1).or_insert(1);
-            acc
-        });
-        freq.into_iter()
+    pub fn find_lucky(mut arr: Vec<i32>) -> i32 {
+        use itertools::Itertools;
+        arr.sort_unstable_by(|a, b| b.cmp(a));
+        arr.into_iter()
+            .chunk_by(|&x| x)
+            .into_iter()
+            .map(|(x, i)| (x, i.count() as i32))
             .filter(|(a, b)| a == b)
-            .next_back()
+            .next()
             .unwrap_or((-1, -1))
             .0
     }
