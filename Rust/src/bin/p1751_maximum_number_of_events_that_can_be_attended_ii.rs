@@ -42,15 +42,13 @@ impl Solution {
         use itertools::Itertools;
         events.sort_unstable();
         let starts = events.iter().map(|x| x[0]).collect_vec();
-        let mut nexts = vec![0; events.len()];
-        for i in 0..events.len() {
-            nexts[i] = starts.partition_point(|&x| x <= events[i][1]);
-        }
+        let nexts = (0..events.len())
+            .map(|i| starts.partition_point(|&x| x <= events[i][1]))
+            .collect_vec();
         let mut prev = vec![0; events.len() + 1];
         for i in (0..events.len()).rev() {
             prev[i] = prev[i + 1].max(events[i][2]);
         }
-
         let mut result = prev[0];
         for _ in 2..=k {
             let mut curr = vec![0; events.len() + 1];
