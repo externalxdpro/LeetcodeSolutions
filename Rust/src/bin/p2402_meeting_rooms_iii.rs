@@ -54,49 +54,6 @@ pub struct Solution {}
 
 // submission codes start here
 
-// impl Solution {
-//     pub fn most_booked(n: i32, mut meetings: Vec<Vec<i32>>) -> i32 {
-//         use std::{cmp::Reverse, collections::BinaryHeap};
-//         let n = n as usize;
-
-//         if n == 1 {
-//             return 0;
-//         }
-
-//         meetings.sort_unstable_by_key(|x| x[0]);
-
-//         let mut taken = vec![false; n];
-//         let mut counts = vec![0; n];
-//         let mut heap: BinaryHeap<Reverse<(i32, usize)>> = BinaryHeap::new();
-
-//         for i in 0..meetings.len() {
-//             while !heap.is_empty() && heap.peek().unwrap().0 .0 <= meetings[i][0] {
-//                 taken[heap.peek().unwrap().0 .1] = false;
-//                 heap.pop();
-//             }
-
-//             let j = taken.iter().position(|&x| x == false);
-//             if let Some(j) = j {
-//                 taken[j] = true;
-//                 counts[j] += 1;
-//                 heap.push(Reverse((meetings[i][1], j)));
-//             } else {
-//                 let top = heap.pop().unwrap().0;
-//                 counts[top.1] += 1;
-//                 heap.push(Reverse((meetings[i][1] + top.0 - meetings[i][0], top.1)));
-//             }
-//         }
-
-//         counts
-//             .into_iter()
-//             .enumerate()
-//             .rev()
-//             .max_by_key(|(_, x)| *x)
-//             .unwrap()
-//             .0 as i32
-//     }
-// }
-
 impl Solution {
     pub fn most_booked(n: i32, mut meetings: Vec<Vec<i32>>) -> i32 {
         use std::{cmp::Reverse, collections::BinaryHeap};
