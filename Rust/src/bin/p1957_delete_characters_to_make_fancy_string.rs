@@ -41,15 +41,10 @@ pub struct Solution {}
 
 impl Solution {
     pub fn make_fancy_string(s: String) -> String {
-        s.as_bytes()
+        s.into_bytes()
             .chunk_by(|a, b| a == b)
-            .map(|x| {
-                x.into_iter()
-                    .take(2)
-                    .map(|&x| x as char)
-                    .collect::<Vec<_>>()
-            })
-            .flatten()
+            .flat_map(|x| x.into_iter().take(2))
+            .map(|&x| x as char)
             .collect()
     }
 }
