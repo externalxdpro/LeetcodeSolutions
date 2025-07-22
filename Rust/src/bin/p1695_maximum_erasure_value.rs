@@ -29,31 +29,19 @@ pub struct Solution {}
 
 impl Solution {
     pub fn maximum_unique_subarray(nums: Vec<i32>) -> i32 {
-        let (mut l, mut r) = (0, 0);
+        let mut l = 0;
         let (mut sum, mut result) = (0, 0);
         let mut seen = vec![false; *nums.iter().max().unwrap() as usize + 1];
-        while r < nums.len() && l <= r {
-            match seen[nums[r] as usize] {
-                true => {
-                    result = result.max(sum);
-                    while nums[l] != nums[r] {
-                        seen[nums[l] as usize] = false;
-                        sum -= nums[l];
-                        l += 1;
-                    }
-                    sum -= nums[l];
-                    seen[nums[l] as usize] = false;
-                    l += 1;
-                    result = result.max(sum);
-                }
-                false => {
-                    seen[nums[r] as usize] = true;
-                    sum += nums[r];
-                    r += 1;
-                }
+        for r in 0..nums.len() {
+            while seen[nums[r] as usize] {
+                seen[nums[l] as usize] = false;
+                sum -= nums[l];
+                l += 1;
             }
+            sum += nums[r];
+            seen[nums[r] as usize] = true;
+            result = result.max(sum);
         }
-        result = result.max(nums[l..r].into_iter().sum());
         result
     }
 }
