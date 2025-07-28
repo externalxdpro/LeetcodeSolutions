@@ -37,25 +37,14 @@ pub struct Solution {}
 
 impl Solution {
     pub fn count_hill_valley(nums: Vec<i32>) -> i32 {
-        let mut result = 0;
-        for i in 1..(nums.len() - 1) {
-            if nums[i] == nums[i - 1] {
-                continue;
-            }
-            let mut j = i + 1;
-            while j < nums.len() && nums[j] == nums[i] {
-                j += 1;
-            }
-            if j == nums.len() {
-                break;
-            }
-            if (nums[i - 1] < nums[i] && nums[i] > nums[j])
-                || (nums[i - 1] > nums[i] && nums[i] < nums[j])
-            {
-                result += 1;
-            }
-        }
-        result
+        use itertools::Itertools;
+
+        nums.into_iter()
+            .dedup()
+            .tuple_windows()
+            .into_iter()
+            .filter(|(a, b, c)| a < b && b > c || a > b && b < c)
+            .count() as i32
     }
 }
 
