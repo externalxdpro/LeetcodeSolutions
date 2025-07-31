@@ -40,14 +40,13 @@ impl Solution {
     pub fn subarray_bitwise_o_rs(arr: Vec<i32>) -> i32 {
         use std::collections::HashSet;
         let mut result: HashSet<i32> = HashSet::new();
-        let mut curr = HashSet::from([0]);
+        let mut curr = vec![];
         for x in arr {
-            let mut curr2 = HashSet::new();
-            for y in curr.iter() {
-                curr2.insert(x | y);
+            for c in &mut curr {
+                *c |= x;
             }
-            curr2.insert(x);
-            curr = curr2;
+            curr.push(x);
+            curr.dedup();
             result.extend(curr.iter());
         }
         result.len() as i32
