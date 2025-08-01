@@ -25,19 +25,23 @@ pub struct Solution {}
 
 impl Solution {
     pub fn generate(num_rows: i32) -> Vec<Vec<i32>> {
-        let mut result = vec![vec![1]];
-        for _ in 1..num_rows {
-            result.push(Self::next(result.last().unwrap()));
-        }
-        result
-    }
-
-    fn next(row: &Vec<i32>) -> Vec<i32> {
-        let mut result = vec![1; row.len() + 1];
-        for i in 1..row.len() {
-            result[i] = row[i] + row[i - 1];
-        }
-        result
+        use itertools::Itertools;
+        use std::iter::once;
+        (1..num_rows).fold(vec![vec![1]], |mut acc, _| {
+            acc.push(
+                once(1)
+                    .chain(
+                        acc.last()
+                            .unwrap()
+                            .iter()
+                            .tuple_windows()
+                            .map(|(a, b)| a + b),
+                    )
+                    .chain(once(1))
+                    .collect_vec(),
+            );
+            acc
+        })
     }
 }
 
