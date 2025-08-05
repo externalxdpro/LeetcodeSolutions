@@ -50,10 +50,10 @@ impl Solution {
     pub fn num_of_unplaced_fruits(fruits: Vec<i32>, mut baskets: Vec<i32>) -> i32 {
         for f in fruits {
             if let Some(i) = baskets.iter().position(|&x| x >= f) {
-                baskets.remove(i);
+                baskets[i] = -1;
             }
         }
-        baskets.len() as i32
+        baskets.into_iter().filter(|&x| x != -1).count() as i32
     }
 }
 
