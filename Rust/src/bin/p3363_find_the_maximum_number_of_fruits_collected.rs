@@ -57,12 +57,14 @@ pub struct Solution {}
 // submission codes start here
 
 impl Solution {
-    pub fn max_collected_fruits(fruits: Vec<Vec<i32>>) -> i32 {
-        let c1: i32 = fruits.iter().enumerate().map(|(i, x)| x[i]).sum();
+    pub fn max_collected_fruits(mut fruits: Vec<Vec<i32>>) -> i32 {
+        let c1: i32 = (0..fruits.len()).map(|i| fruits[i][i]).sum();
         let c2 = Self::dp(&fruits);
-        let fruits: Vec<Vec<i32>> = (0..fruits.len())
-            .map(|i| fruits.iter().map(|x| x[i].clone()).collect::<Vec<_>>())
-            .collect();
+        for i in 0..fruits.len() {
+            for j in 0..fruits.len() {
+                fruits[i][j] = fruits[j][i];
+            }
+        }
         let c3 = Self::dp(&fruits);
         c1 + c2 + c3
     }
@@ -75,12 +77,12 @@ impl Solution {
         for i in 1..(n - 1) {
             for j in (i + 1).max(n - i - 1)..n {
                 let mut best = prev[j].max(prev[j - 1]);
-                if j + 1 < n {
-                    best = best.max(prev[j + 1]);
+                if let Some(&x) = prev.get(j + 1) {
+                    best = best.max(x);
                 }
                 curr[j] = best + fruits[i][j];
             }
-            prev = curr.clone();
+            std::mem::swap(&mut prev, &mut curr);
         }
 
         *prev.last().unwrap()
