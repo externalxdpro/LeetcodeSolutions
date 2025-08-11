@@ -36,30 +36,31 @@ pub struct Solution {}
 // submission codes start here
 
 impl Solution {
-    pub fn product_queries(n: i32, queries: Vec<Vec<i32>>) -> Vec<i32> {
+    pub fn product_queries(mut n: i32, queries: Vec<Vec<i32>>) -> Vec<i32> {
         const MOD: i64 = 1e9 as i64 + 7;
-        let mut result = vec![1; queries.len()];
-
-        for i in 0..queries.len() {
-            let (l, r) = (queries[i][0], queries[i][1]);
-            let mut np = 0;
-            let mut powers = [1; 32];
-            for j in 0..32 {
-                let t = 1 << j;
-                if (t & n) != 0 {
-                    powers[np] = t;
-                    np += 1;
-                }
+        let mut bins = vec![];
+        let mut rep = 1;
+        while n > 0 {
+            if n % 2 == 1 {
+                bins.push(rep);
             }
+            n /= 2;
+            rep *= 2;
+        }
 
-            for j in l..=r {
-                let mut tmp = result[i] as i64;
-                tmp *= powers[j as usize] as i64;
-                tmp %= MOD;
-                result[i] = tmp as i32;
+        let mut results = vec![vec![0; bins.len()]; bins.len()];
+        for i in 0..bins.len() {
+            let mut curr = 1i64;
+            for j in i..bins.len() {
+                curr = (curr * bins[j]) % MOD;
+                results[i][j] = curr as i32;
             }
         }
-        result
+
+        queries
+            .into_iter()
+            .map(|q| results[q[0] as usize][q[1] as usize])
+            .collect()
     }
 }
 
