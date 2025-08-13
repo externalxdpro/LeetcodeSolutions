@@ -33,16 +33,9 @@ pub struct Solution {}
 
 impl Solution {
     pub fn is_power_of_three(n: i32) -> bool {
-        let n = n as i64;
-        let mut curr: i64 = 1;
-        while curr < n {
-            curr *= 3;
-        }
-        if curr == n {
-            true
-        } else {
-            false
-        }
+        let exp = i32::MAX.ilog(3);
+        let pow = 3i32.pow(exp);
+        n > 0 && pow % n == 0
     }
 }
 
