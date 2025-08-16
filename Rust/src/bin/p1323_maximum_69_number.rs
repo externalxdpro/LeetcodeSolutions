@@ -37,24 +37,7 @@ pub struct Solution {}
 
 impl Solution {
     pub fn maximum69_number(num: i32) -> i32 {
-        let mut digs = Self::to_vec(num);
-        let i = digs.iter().position(|&x| x == 6);
-        if let Some(i) = i {
-            digs[i] = 9;
-            digs.into_iter().fold(0, |acc, x| acc * 10 + x)
-        } else {
-            num
-        }
-    }
-
-    fn to_vec(mut n: i32) -> Vec<i32> {
-        let mut result = vec![];
-        while n > 0 {
-            result.push(n % 10);
-            n /= 10;
-        }
-        result.reverse();
-        result
+        num.to_string().replacen("6", "9", 1).parse().unwrap()
     }
 }
 
