@@ -43,15 +43,9 @@ impl Solution {
         nums.into_iter()
             .chunk_by(|&x| x)
             .into_iter()
-            .filter_map(|(_, mut c)| {
-                let x = c.next();
-                let n = c.count() as i64 + 1;
-                if x == Some(0) {
-                    Some(n * (n + 1) / 2)
-                } else {
-                    None
-                }
-            })
+            .map(|(_, c)| c.collect_vec())
+            .filter(|c| c[0] == 0)
+            .map(|c| (c.len() * (c.len() + 1) / 2) as i64)
             .sum()
     }
 }
