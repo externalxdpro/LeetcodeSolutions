@@ -36,11 +36,11 @@ impl Solution {
     pub fn area_of_max_diagonal(dimensions: Vec<Vec<i32>>) -> i32 {
         let max = dimensions
             .into_iter()
-            .map(|x| ((((x[0] * x[0]) + (x[1] * x[1])) as f64).sqrt(), x))
-            .max_by(|(x, a), (y, b)| x.total_cmp(y).then((a[0] * a[1]).cmp(&(b[0] * b[1]))))
+            .map(|x| (((x[0] * x[0] + x[1] * x[1]) as f64).sqrt(), x[0] * x[1]))
+            .max_by(|(x, a), (y, b)| x.total_cmp(y).then(a.cmp(b)))
             .unwrap()
             .1;
-        max[0] * max[1]
+        max
     }
 }
 
