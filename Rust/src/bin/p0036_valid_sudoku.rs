@@ -54,45 +54,25 @@ pub struct Solution {}
 impl Solution {
     pub fn is_valid_sudoku(board: Vec<Vec<char>>) -> bool {
         use std::collections::HashSet;
+        let mut rows = vec![HashSet::new(); 9];
+        let mut cols = vec![HashSet::new(); 9];
+        let mut squares = vec![vec![HashSet::new(); 3]; 3];
+
         for i in 0..9 {
-            let mut temp = HashSet::new();
             for j in 0..9 {
-                if board[i][j] != '.' && temp.contains(&board[i][j]) {
+                let curr = board[i][j];
+                if curr == '.' {
+                    continue;
+                }
+                if rows[i].contains(&curr)
+                    || cols[j].contains(&curr)
+                    || squares[i / 3][j / 3].contains(&curr)
+                {
                     return false;
                 }
-                temp.insert(board[i][j]);
-            }
-        }
-        for j in 0..board[0].len() {
-            let mut temp = HashSet::new();
-            for i in 0..board.len() {
-                if board[i][j] != '.' && temp.contains(&board[i][j]) {
-                    return false;
-                }
-                temp.insert(board[i][j]);
-            }
-        }
-
-        let dims = [0, 3, 6, 9];
-        for i in 0..3 {
-            for j in 0..3 {
-                if !Self::sub(&board, dims[i], dims[i + 1], dims[j], dims[j + 1]) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    fn sub(board: &Vec<Vec<char>>, il: usize, ir: usize, jl: usize, jr: usize) -> bool {
-        let mut set = std::collections::HashSet::new();
-        for i in il..ir {
-            for j in jl..jr {
-                if board[i][j] != '.' && set.contains(&board[i][j]) {
-                    return false;
-                }
-                set.insert(board[i][j]);
+                rows[i].insert(curr);
+                cols[j].insert(curr);
+                squares[i / 3][j / 3].insert(curr);
             }
         }
         return true;
