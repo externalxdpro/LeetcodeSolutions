@@ -37,13 +37,23 @@ class Solution {
   public:
     std::vector<int> getNoZeroIntegers(int n) {
         for (int i = 0; i < n; i++) {
-            if (std::to_string(i).find('0') != std::string::npos ||
-                std::to_string(n - i).find('0') != std::string::npos) {
+            if (hasZero(i) || hasZero(n - i)) {
                 continue;
             }
             return {i, n - i};
         }
         return {};
+    }
+
+  private:
+    bool hasZero(int n) {
+        do {
+            if (n % 10 == 0) {
+                return true;
+            }
+            n /= 10;
+        } while (n);
+        return false;
     }
 };
 
