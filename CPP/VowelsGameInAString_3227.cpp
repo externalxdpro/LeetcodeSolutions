@@ -51,15 +51,10 @@
 
 class Solution {
   public:
-    bool doesAliceWin(std::string &s) {
-        const std::unordered_set<char> vowels = {'a', 'e', 'i', 'o', 'u',
-                                                 'A', 'E', 'I', 'O', 'U'};
-        for (char c : s) {
-            if (vowels.contains(c)) {
-                return true;
-            }
-        }
-        return false;
+    static inline bool doesAliceWin(std::string &s) {
+        const std::unordered_set<char> v = {'a', 'e', 'i', 'o', 'u',
+                                            'A', 'E', 'I', 'O', 'U'};
+        return std::ranges::any_of(s, [&](char c) { return v.contains(c); });
     }
 };
 
