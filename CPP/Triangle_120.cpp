@@ -43,22 +43,15 @@ class Solution {
     int minimumTotal(std::vector<std::vector<int>> &triangle) {
         std::vector<std::vector<int>> memo(triangle.size(),
                                            std::vector(triangle.size(), -1));
-        return recurse(triangle, 0, 0, memo);
-    }
-
-  private:
-    int recurse(std::vector<std::vector<int>> &triangle, int i, int j,
-                std::vector<std::vector<int>> &memo) {
-        if (i >= (int)triangle.size()) {
-            return 0;
+        memo.back() = triangle.back();
+        for (int i = triangle.size() - 2; i >= 0; i--) {
+            for (int j = 0; j < i + 1; j++) {
+                int l = memo[i + 1][j];
+                int r = memo[i + 1][j + 1];
+                memo[i][j] = triangle[i][j] + std::min(l, r);
+            }
         }
-        if (memo[i][j] != -1) {
-            return memo[i][j];
-        }
-
-        int l = recurse(triangle, i + 1, j, memo);
-        int r = recurse(triangle, i + 1, j + 1, memo);
-        return memo[i][j] = triangle[i][j] + std::min(l, r);
+        return memo[0][0];
     }
 };
 
