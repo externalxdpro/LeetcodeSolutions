@@ -68,12 +68,22 @@ class Solution {
     pacificAtlantic(std::vector<std::vector<int>> &heights) {
         m = heights.size(), n = heights[0].size();
         std::vector<std::vector<int>> result;
+
+        std::vector<std::vector<bool>> vis1(m, std::vector(n, false));
+        std::vector<std::vector<bool>> vis2(m, std::vector(n, false));
+        for (int i = 0; i < m; i++) {
+            dfs(heights, i, 0, vis1);
+            dfs(heights, i, n - 1, vis2);
+        }
+
+        for (int j = 0; j < n; j++) {
+            dfs(heights, 0, j, vis1);
+            dfs(heights, m - 1, j, vis2);
+        }
+
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                std::vector<std::vector<bool>> vis1(m, std::vector(n, false));
-                std::vector<std::vector<bool>> vis2(m, std::vector(n, false));
-                if (dfs(heights, i, j, false, vis1) &&
-                    dfs(heights, i, j, true, vis2)) {
+                if (vis1[i][j] && vis2[i][j]) {
                     result.push_back({i, j});
                 }
             }
@@ -83,25 +93,16 @@ class Solution {
     }
 
   private:
-    bool dfs(std::vector<std::vector<int>> &heights, int i, int j, bool ocean,
+    void dfs(std::vector<std::vector<int>> &heights, int i, int j,
              std::vector<std::vector<bool>> &visited) {
-        if ((!ocean && (i == 0 || j == 0)) ||
-            (ocean && (i == m - 1 || j == n - 1))) {
-            return true;
-        }
-
         visited[i][j] = true;
         for (auto &d : dirs) {
             int di = i + d.first, dj = j + d.second;
             if (di >= 0 && dj >= 0 && di < m && dj < n &&
-                heights[di][dj] <= heights[i][j] && !visited[di][dj]) {
-                if (dfs(heights, di, dj, ocean, visited)) {
-                    return true;
-                }
+                heights[di][dj] >= heights[i][j] && !visited[di][dj]) {
+                dfs(heights, di, dj, visited);
             }
         }
-
-        return false;
     }
 };
 
