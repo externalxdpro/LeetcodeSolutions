@@ -58,26 +58,27 @@
 class Solution {
   public:
     std::vector<std::string> removeAnagrams(std::vector<std::string> &words) {
+        std::vector<std::string> result;
+        int p = 0;
         for (int i = 1; i < words.size(); i++) {
-            if (words[i].size() != words[i - 1].size()) {
-                continue;
-            }
-
-            auto curr = strToFreq(words[i]), prev = strToFreq(words[i - 1]);
-            if (curr == prev) {
+            if (cmp(words[i], words[p])) {
                 words.erase(words.begin() + i);
                 i--;
+            } else {
+                p = i;
             }
         }
+
         return words;
     }
 
-    std::unordered_map<char, int> strToFreq(std::string &s) {
-        std::unordered_map<char, int> result;
-        for (char c : s) {
-            result[c]++;
+    bool cmp(std::string a, std::string b) {
+        if (a.size() != b.size()) {
+            return false;
         }
-        return result;
+        std::sort(a.begin(), a.end());
+        std::sort(b.begin(), b.end());
+        return a == b;
     }
 };
 
