@@ -41,6 +41,7 @@
 
 #include <algorithm>
 #include <fmt/ranges.h>
+#include <stack>
 #include <vector>
 
 #include "_BinaryTree.hpp"
@@ -49,18 +50,22 @@ class Solution {
   public:
     std::vector<int> preorderTraversal(TreeNode *root) {
         std::vector<int> result;
-        recurse(root, result);
-        return result;
-    }
+        std::stack<TreeNode *> stack{{root}};
 
-  private:
-    void recurse(TreeNode *node, std::vector<int> &result) {
-        if (node == nullptr) {
-            return;
+        while (!stack.empty()) {
+            TreeNode *curr = stack.top();
+            if (stack.top() == nullptr) {
+                stack.pop();
+                continue;
+            }
+
+            result.push_back(curr->val);
+            stack.pop();
+            stack.push(curr->right);
+            stack.push(curr->left);
         }
-        result.push_back(node->val);
-        recurse(node->left, result);
-        recurse(node->right, result);
+
+        return result;
     }
 };
 
