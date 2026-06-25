@@ -2,7 +2,7 @@
 #include <vector>
 
 struct ListNode {
-    int       val;
+    int val;
     ListNode *next;
     ListNode() : val(0), next(nullptr) {}
     ListNode(int x) : val(x), next(nullptr) {}
@@ -21,7 +21,7 @@ inline ListNode *toLinkedList(const std::vector<int> &arr) {
                 ptr = root;
             }
             ptr->next = newNode;
-            ptr       = ptr->next;
+            ptr = ptr->next;
         }
     }
     return root;
@@ -31,8 +31,10 @@ inline std::vector<int> toVector(ListNode *root) {
     std::vector<int> result;
 
     while (root != nullptr) {
+        ListNode *next = root->next;
         result.push_back(root->val);
-        root = root->next;
+        delete root;
+        root = next;
     }
 
     return result;
