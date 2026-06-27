@@ -34,49 +34,67 @@
 class Solution {
   public:
     ListNode *sortList(ListNode *head) {
-        if (head == nullptr) {
-            return nullptr;
-        }
-
-        if (head->next == nullptr) {
+        if (head == nullptr || head->next == nullptr) {
             return head;
         }
 
-        ListNode *head1 = head, *slow = head, *fast = head->next;
-        while (fast != nullptr && fast->next != nullptr) {
-            fast = fast->next->next;
-            slow = slow->next;
+        int len = 0;
+        ListNode *curr = head;
+        while (curr != nullptr) {
+            len++;
+            curr = curr->next;
         }
-        ListNode *head2 = slow->next;
-        slow->next = nullptr;
-        head1 = sortList(head1);
-        head2 = sortList(head2);
-        ListNode *merged = merge(head1, head2);
-        return merged;
+
+        ListNode temp(0, head);
+        ListNode *head1, *head2, *tail;
+        for (int i = 1; i < len; i *= 2) {
+            curr = temp.next;
+            tail = &temp;
+            while (curr != nullptr) {
+                head1 = curr;
+                head2 = split(head1, i);
+                curr = split(head2, i);
+                tail = merge(head1, head2, tail);
+            }
+        }
+        return temp.next;
     }
 
   private:
-    ListNode *merge(ListNode *head1, ListNode *head2) {
-        ListNode *tempHead = new ListNode(0);
-        ListNode *tail = tempHead;
+    ListNode *split(ListNode *head, int n) {
+        for (int i = 1; head != nullptr && i < n; i++) {
+            head = head->next;
+        }
 
-        while (head1 != nullptr || head2 != nullptr) {
-            if (head2 == nullptr ||
-                (head1 != nullptr && head1->val < head2->val)) {
+        if (head == nullptr) {
+            return nullptr;
+        }
+        ListNode *head2 = head->next;
+        head->next = nullptr;
+        return head2;
+    }
+
+    ListNode *merge(ListNode *head1, ListNode *head2, ListNode *head) {
+        ListNode *tail = head;
+
+        while (head1 != nullptr && head2 != nullptr) {
+            if (head1->val < head2->val) {
                 tail->next = head1;
+                tail = head1;
                 head1 = head1->next;
-                tail->next->next = nullptr;
             } else {
                 tail->next = head2;
+                tail = head2;
                 head2 = head2->next;
-                tail->next->next = nullptr;
             }
+        }
+
+        tail->next = (head1 != nullptr ? head1 : head2);
+        while (tail->next != nullptr) {
             tail = tail->next;
         }
 
-        ListNode *head = tempHead->next;
-        delete tempHead;
-        return head;
+        return tail;
     }
 };
 
