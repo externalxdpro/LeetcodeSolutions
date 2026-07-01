@@ -44,28 +44,24 @@
 #include <vector>
 
 class MinStack {
-    std::stack<int> stack, minStack;
+    std::stack<std::pair<int, int>> stack;
 
   public:
     MinStack() {}
 
     void push(int value) {
-        stack.push(value);
-        if (minStack.empty() || value <= minStack.top()) {
-            minStack.push(value);
+        if (stack.empty() || value <= stack.top().second) {
+            stack.emplace(value, value);
         } else {
-            minStack.push(minStack.top());
+            stack.emplace(value, stack.top().second);
         }
     }
 
-    void pop() {
-        stack.pop();
-        minStack.pop();
-    }
+    void pop() { stack.pop(); }
 
-    int top() { return stack.top(); }
+    int top() { return stack.top().first; }
 
-    int getMin() { return minStack.top(); }
+    int getMin() { return stack.top().second; }
 };
 
 int main(int argc, char *argv[]) {}
