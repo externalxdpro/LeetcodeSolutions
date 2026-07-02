@@ -71,7 +71,6 @@
 
 #include <algorithm>
 #include <fmt/ranges.h>
-#include <unordered_set>
 #include <vector>
 
 #include "_LinkedList.hpp"
@@ -79,18 +78,23 @@
 class Solution {
   public:
     ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
-        std::unordered_set<ListNode *> seen;
-        for (ListNode *ptr1 = headA; ptr1 != nullptr; ptr1 = ptr1->next) {
-            seen.insert(ptr1);
-        }
+        ListNode *ptr1 = headA, *ptr2 = headB;
 
-        for (ListNode *ptr2 = headB; ptr2 != nullptr; ptr2 = ptr2->next) {
-            if (seen.contains(ptr2)) {
-                return ptr2;
+        while (ptr1 != ptr2) {
+            if (ptr1 == nullptr) {
+                ptr1 = headB;
+            } else {
+                ptr1 = ptr1->next;
+            }
+
+            if (ptr2 == nullptr) {
+                ptr2 = headA;
+            } else {
+                ptr2 = ptr2->next;
             }
         }
 
-        return nullptr;
+        return ptr1;
     }
 };
 
