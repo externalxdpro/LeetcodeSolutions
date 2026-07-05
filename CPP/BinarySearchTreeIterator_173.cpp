@@ -50,29 +50,31 @@
 
 #include <algorithm>
 #include <fmt/ranges.h>
+#include <stack>
 #include <vector>
 
 #include "_BinaryTree.hpp"
 
 class BSTIterator {
-    std::vector<int> vals;
-    size_t curr;
+    std::stack<TreeNode *> stack;
 
   public:
-    BSTIterator(TreeNode *root) : curr(-1) { inorder(root); }
+    BSTIterator(TreeNode *root) { pushAll(root); }
 
-    int next() { return vals[++curr]; }
+    int next() {
+        TreeNode *temp = stack.top();
+        stack.pop();
+        pushAll(temp->right);
+        return temp->val;
+    }
 
-    bool hasNext() { return curr + 1 < vals.size(); }
+    bool hasNext() { return !stack.empty(); }
 
   private:
-    void inorder(TreeNode *node) {
-        if (node == nullptr) {
-            return;
+    void pushAll(TreeNode *node) {
+        for (; node != nullptr; node = node->left) {
+            stack.push(node);
         }
-        inorder(node->left);
-        vals.push_back(node->val);
-        inorder(node->right);
     }
 };
 
