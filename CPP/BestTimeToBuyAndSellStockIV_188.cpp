@@ -36,10 +36,11 @@
 #include <vector>
 
 class Solution {
-    std::map<std::tuple<int, int, int>, int> memo;
+    std::vector<std::vector<std::vector<int>>> memo;
 
   public:
     int maxProfit(int k, std::vector<int> &prices) {
+	memo.assign(prices.size(), std::vector<std::vector<int>>(2, std::vector(k+1, -1)));
         return dp(prices, 0, true, k);
     }
 
@@ -48,8 +49,8 @@ class Solution {
         if (i == prices.size() || num == 0) {
             return 0;
         }
-        if (memo.contains({i, buy, num})) {
-            return memo[{i, buy, num}];
+        if (memo[i][buy][num]!=-1) {
+            return memo[i][buy][num];
         }
         int skip, take;
         if (buy) {
@@ -59,7 +60,7 @@ class Solution {
             skip = dp(prices, i + 1, false, num);
             take = dp(prices, i + 1, true, num - 1) + prices[i];
         }
-        return memo[{i, buy, num}] = std::max(skip, take);
+        return memo[i][buy][num] = std::max(skip, take);
     }
 };
 
