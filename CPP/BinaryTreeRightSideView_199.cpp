@@ -48,31 +48,22 @@
 class Solution {
   public:
     std::vector<int> rightSideView(TreeNode *root) {
-        std::vector<std::vector<int>> levels;
-        std::queue<TreeNode *> nodes{{root}};
-        while (!nodes.empty()) {
-            int n = nodes.size();
-            levels.emplace_back(0);
-            while (n--) {
-                TreeNode *top = nodes.front();
-                nodes.pop();
-                if (top == nullptr) {
-                    continue;
-                }
-                levels.back().push_back(top->val);
-                nodes.push(top->left);
-                nodes.push(top->right);
-            }
+        std::vector<int> result;
+        recurse(root, 0, result);
+        return result;
+    }
+
+  private:
+    void recurse(TreeNode *node, int level, std::vector<int> &result) {
+        if (node == nullptr) {
+            return;
+        }
+        if (level == result.size()) {
+            result.push_back(node->val);
         }
 
-        std::vector<int> result;
-        for (std::vector<int> &level : levels) {
-            if (level.empty()) {
-                continue;
-            }
-            result.push_back(level.back());
-        }
-        return result;
+        recurse(node->right, level + 1, result);
+        recurse(node->left, level + 1, result);
     }
 };
 
