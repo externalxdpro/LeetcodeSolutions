@@ -41,12 +41,11 @@
 
 #include <algorithm>
 #include <fmt/ranges.h>
-#include <unordered_map>
 #include <vector>
 
 class Trie {
     struct Node {
-        std::unordered_map<char, Node *> children;
+        Node *children[26];
         bool end = false;
     };
 
@@ -58,10 +57,10 @@ class Trie {
     void insert(std::string word) {
         Node *curr = root;
         for (char c : word) {
-            if (!curr->children.contains(c)) {
-                curr->children[c] = new Node();
+            if (curr->children[c - 'a'] == nullptr) {
+                curr->children[c - 'a'] = new Node();
             }
-            curr = curr->children[c];
+            curr = curr->children[c - 'a'];
         }
         curr->end = true;
     }
@@ -69,10 +68,10 @@ class Trie {
     bool search(std::string word) {
         Node *curr = root;
         for (char c : word) {
-            if (!curr->children.contains(c)) {
+            if (curr->children[c - 'a'] == nullptr) {
                 return false;
             }
-            curr = curr->children[c];
+            curr = curr->children[c - 'a'];
         }
         return curr->end;
     }
@@ -80,10 +79,10 @@ class Trie {
     bool startsWith(std::string prefix) {
         Node *curr = root;
         for (char c : prefix) {
-            if (!curr->children.contains(c)) {
+            if (curr->children[c - 'a'] == nullptr) {
                 return false;
             }
-            curr = curr->children[c];
+            curr = curr->children[c - 'a'];
         }
         return true;
     }
