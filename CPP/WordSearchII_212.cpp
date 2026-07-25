@@ -36,15 +36,15 @@
 
 class Solution {
     class Trie {
+      public:
         struct Node {
             std::unique_ptr<Node> children[26];
             bool end = false;
         };
 
-      public:
         Node root;
 
-        Trie() : root(Node()) {}
+        Trie() = default;
 
         void insert(const std::string &word) {
             Node *curr = &root;
@@ -55,28 +55,6 @@ class Solution {
                 curr = curr->children[c - 'a'].get();
             }
             curr->end = true;
-        }
-
-        bool search(const std::string &word) {
-            Node *curr = &root;
-            for (char c : word) {
-                if (curr->children[c - 'a'] == nullptr) {
-                    return false;
-                }
-                curr = curr->children[c - 'a'].get();
-            }
-            return curr->end;
-        }
-
-        bool startsWith(const std::string &prefix) {
-            Node *curr = &root;
-            for (char c : prefix) {
-                if (curr->children[c - 'a'] == nullptr) {
-                    return false;
-                }
-                curr = curr->children[c - 'a'].get();
-            }
-            return true;
         }
     };
 
@@ -90,11 +68,9 @@ class Solution {
         }
 
         std::unordered_set<std::string> result;
-        std::vector<std::vector<bool>> seen(
-            board.size(), std::vector(board[0].size(), false));
         for (int i = 0; i < board.size(); i++) {
             for (int j = 0; j < board[i].size(); j++) {
-                recurse(board, i, j, "", seen, result);
+                recurse(board, i, j, &this->words.root, "", result);
             }
         }
         return std::vector(result.begin(), result.end());
@@ -102,29 +78,32 @@ class Solution {
 
   private:
     void recurse(std::vector<std::vector<char>> &board, int i, int j,
-                 std::string curr, std::vector<std::vector<bool>> &seen,
+                 Trie::Node *node, std::string word,
                  std::unordered_set<std::string> &result) {
         if (i < 0 || i >= board.size() || j < 0 || j >= board[0].size() ||
-            seen[i][j]) {
+            board[i][j] == '.') {
             return;
         }
 
-        std::string newWord = curr + board[i][j];
-        if (!words.startsWith(newWord)) {
+        Trie::Node *newNode = node->children[board[i][j] - 'a'].get();
+        if (newNode == nullptr) {
             return;
         }
-        seen[i][j] = true;
+        char c = board[i][j];
+        board[i][j] = '.';
 
-        if (words.search(newWord)) {
-            result.insert(newWord);
+        word.push_back(c);
+        if (newNode->end) {
+            result.insert(word);
         }
 
-        recurse(board, i + 1, j, newWord, seen, result);
-        recurse(board, i - 1, j, newWord, seen, result);
-        recurse(board, i, j + 1, newWord, seen, result);
-        recurse(board, i, j - 1, newWord, seen, result);
+        recurse(board, i + 1, j, newNode, word, result);
+        recurse(board, i - 1, j, newNode, word, result);
+        recurse(board, i, j + 1, newNode, word, result);
+        recurse(board, i, j - 1, newNode, word, result);
 
-        seen[i][j] = false;
+        board[i][j] = c;
+        word.pop_back();
     }
 };
 
