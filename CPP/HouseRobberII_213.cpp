@@ -46,28 +46,32 @@ class Solution {
             return nums[0];
         }
 
-        std::vector<int> memo(n, -1);
-        int a = recurse(nums, n - 1, 0, memo);
-        std::fill(memo.begin(), memo.end(), -1);
-        int b = recurse(nums, n, 1, memo);
-        int c = recurse(nums, n, 2, memo);
-        return std::max({a, b, c});
+        std::vector<int> arr(n - 1);
+        for (size_t i = 0; i < n - 1; i++) {
+            arr[i] = nums[i];
+        }
+        int a = solve(arr);
+        for (size_t i = 1; i < n; i++) {
+            arr[i - 1] = nums[i];
+        }
+        int b = solve(arr);
+        return std::max(a, b);
     }
 
   private:
-    int recurse(std::vector<int> &nums, size_t n, size_t i,
-                std::vector<int> &memo) {
-        if (i >= n) {
-            return 0;
+    int solve(std::vector<int> &nums) {
+        size_t n = nums.size();
+        if (n == 1) {
+            return nums[0];
         }
-        if (memo[i] != -1) {
-            return memo[i];
+        std::vector<int> memo(n);
+        memo[0] = nums[0];
+        memo[1] = std::max(nums[0], nums[1]);
+
+        for (size_t i = 2; i < n; i++) {
+            memo[i] = std::max(nums[i] + memo[i - 2], memo[i - 1]);
         }
-
-        int a = recurse(nums, n, i + 2, memo);
-        int b = recurse(nums, n, i + 3, memo);
-
-        return memo[i] = nums[i] + std::max(a, b);
+        return memo[n - 1];
     }
 };
 
