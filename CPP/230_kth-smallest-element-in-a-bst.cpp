@@ -19,25 +19,26 @@ using namespace std;
 class Solution {
   public:
     int kthSmallest(TreeNode *root, int k) {
-        std::stack<int> stack;
-        dfs(root, stack);
-        int result;
-        while (k--) {
-            result = stack.top();
-            stack.pop();
-        }
+	int result = -1;
+        dfs(root, k, result);
         return result;
     }
 
   private:
-    void dfs(TreeNode *node, std::stack<int> &stack) {
+    void dfs(TreeNode *node, int &k, int &result) {
         if (node == nullptr) {
             return;
         }
 
-        dfs(node->right, stack);
-        stack.push(node->val);
-        dfs(node->left, stack);
+        dfs(node->left, k, result);
+
+	k--;
+        if (k == 0) {
+	    result = node->val;
+	    return;
+        }
+
+        dfs(node->right, k, result);
     }
 };
 
